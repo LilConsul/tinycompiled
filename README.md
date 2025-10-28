@@ -8,12 +8,12 @@ TinyCompiled is a small educational compiler and visualizer for a custom assembl
 
 ## Overview
 
-TinyCompiled takes programs written in **TinyASM** (`.tc` files) — a simplified, human-readable assembly-like language — and translates them into real **x86-64 NASM assembly**, allowing users to see exactly how each instruction maps to low-level operations. By combining compilation with visualization, TinyCompiled bridges the gap between abstract programming concepts and the underlying machine instructions, making it a powerful tool for students, educators, and hobbyists.
+TinyCompiled takes programs written in **TinyCompiled** (`.tc` files) — a simplified, human-readable assembly-like language — and translates them into real **x86-64 NASM assembly**, allowing users to see exactly how each instruction maps to low-level operations. By combining compilation with visualization, TinyCompiled bridges the gap between abstract programming concepts and the underlying machine instructions, making it a powerful tool for students, educators, and hobbyists.
 
 ## Key Features
 
-### 🔄 TinyASM (.tc) → NASM Translation
-TinyCompiled converts TinyASM instructions into NASM assembly line by line, including:
+### 🔄 TinyCompiled (.tc) → NASM Translation
+TinyCompiled converts TinyCompiled instructions into NASM assembly line by line, including:
 - Arithmetic operations
 - Data movement
 - Control flow
@@ -22,7 +22,7 @@ TinyCompiled converts TinyASM instructions into NASM assembly line by line, incl
 Each translation preserves the logical structure of the program, making it easy to follow and understand how high-level logic is implemented in assembly.
 
 ### 📊 Side-by-Side Visualization
-Using the **Textualize/Textual** Python library, TinyCompiled displays TinyASM code alongside its NASM translation in a diff-style table. This visualization allows users to clearly see the mapping between abstract instructions and real machine operations, highlighting the effect of each line in an interactive terminal interface.
+Using the **Textualize/Textual** Python library, TinyCompiled displays TinyCompiled code alongside its NASM translation in a diff-style table. This visualization allows users to clearly see the mapping between abstract instructions and real machine operations, highlighting the effect of each line in an interactive terminal interface.
 
 ### 💻 CLI Interface
 The command-line interface provides simple commands for:
@@ -43,7 +43,7 @@ This demonstrates how textual data is stored and manipulated at a low level, hel
 
 ## Example
 
-### TinyASM (.tc) File
+### TinyCompiled (.tc) File
 
 ```assembly
 LOAD R1, 5
