@@ -1,0 +1,7 @@
+[project]
+name = "tinycompiled"
+version = "0.1.0"
+description = "TinyCompiled is a small educational compiler for a custom assembly-like language, designed to help new developers understand the fundamentals of assembly language and how compilers translate high-level instructions into low-level machine operations."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = []
