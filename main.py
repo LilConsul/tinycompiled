@@ -13,6 +13,7 @@ class TinyCompiledApp(App):
         self.editor = TextArea(
             placeholder="Write TinyCompiled code here...",
             language="python",
+            show_line_numbers=True,
             soft_wrap=False,
             tab_behavior="indent"
         )
