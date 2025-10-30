@@ -1,0 +1,1 @@
+from .compiler import compile_tc_to_nasm

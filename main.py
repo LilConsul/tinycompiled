@@ -3,6 +3,9 @@ from textual.containers import Horizontal
 from textual.widgets import TextArea, Static
 from textual.reactive import var
 
+from src import compile_tc_to_nasm
+
+
 def translate_tc_to_nasm(tc_code: str) -> str:
     return tc_code
 
@@ -52,5 +55,32 @@ class TinyCompiledApp(App):
         nasm_code = translate_tc_to_nasm(self.tc_code)
         self.output.update(nasm_code)
 
-if __name__ == "__main__":
-    TinyCompiledApp().run()
+
+if __name__ == '__main__':
+    # TinyCompiledApp().run()
+
+    # Example 1: Simple arithmetic
+    example1 = """
+        ; Simple program
+        VAR result, 0
+        PRINT result
+        
+        LOAD R1, 10
+        PRINT R1
+        
+        LOAD R2, 20
+        PRINT R1
+        
+        PRINT result
+        HALT
+    """
+
+    print("Compiling TinyCompiled to NASM...")
+    print("=" * 60)
+    asm_output = compile_tc_to_nasm(example1)
+    print(asm_output)
+    print("=" * 60)
+    print("\nTo assemble and run:")
+    print("  nasm -f elf64 output.asm -o output.o")
+    print("  gcc output.o -o output -no-pie")
+    print("  ./output")
