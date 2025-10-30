@@ -207,20 +207,3 @@ class Lexer:
 
         self.tokens.append(Token(TokenType.EOF, None, self.line, self.column))
         return self.tokens
-
-
-if __name__ == "__main__":
-    code = """
-    VAR x
-    SET x, 10
-    PRINT x
-    ; This is a comment
-    LOAD R1, 0x1A
-    LOAD R2, 0b1010
-    PRINT R1
-    PRINT R2
-    """
-    lexer = Lexer(code)
-    tokens = lexer.tokenize()
-    for token in tokens:
-        print(token)

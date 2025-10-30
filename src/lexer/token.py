@@ -8,6 +8,8 @@ class TokenType(Enum):
     VAR = auto()
     LOAD = auto()
     SET = auto()
+
+
     MOVE = auto()  # TODO
     ADD = auto()  # TODO
     SUB = auto()  # TODO
