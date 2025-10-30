@@ -103,15 +103,18 @@ class Lexer:
             if current is None:
                 break
 
+            # Comments
             if current == ";":
                 self.skip_comment()
                 continue
 
+            # Commas
             if self.current_char() == ",":
                 self.tokens.append(Token(TokenType.COMMA, ",", self.line, self.column))
                 self.advance()
                 continue
 
+            # Newlines
             if self.current_char() == "\n":
                 self.tokens.append(
                     Token(TokenType.NEWLINE, "\n", self.line, self.column)
@@ -119,6 +122,7 @@ class Lexer:
                 self.advance()
                 continue
 
+            # Numbers
             if self.current_char().isdigit() or (
                 self.current_char() == "-"
                 and self.peek_char()
@@ -128,8 +132,42 @@ class Lexer:
                 self.tokens.append(Token(TokenType.NUMBER, num, self.line, self.column))
                 continue
 
-            self._tokenize_operators()
+            # Operators
+            if self.current_char() == "=" and self.peek_char() == "=":
+                self.tokens.append(Token(TokenType.EQ, "==", self.line, self.column))
+                self.advance()
+                self.advance()
+                continue
 
+            if self.current_char() == "!" and self.peek_char() == "=":
+                self.tokens.append(Token(TokenType.NEQ, "!=", self.line, self.column))
+                self.advance()
+                self.advance()
+                continue
+
+            if self.current_char() == ">" and self.peek_char() == "=":
+                self.tokens.append(Token(TokenType.GTE, ">=", self.line, self.column))
+                self.advance()
+                self.advance()
+                continue
+
+            if self.current_char() == "<" and self.peek_char() == "=":
+                self.tokens.append(Token(TokenType.LTE, "<=", self.line, self.column))
+                self.advance()
+                self.advance()
+                continue
+
+            if self.current_char() == ">":
+                self.tokens.append(Token(TokenType.GT, ">", self.line, self.column))
+                self.advance()
+                continue
+
+            if self.current_char() == "<":
+                self.tokens.append(Token(TokenType.LT, "<", self.line, self.column))
+                self.advance()
+                continue
+
+            # Identifiers, Keywords, Registers, Labels
             if self.current_char().isalpha() or self.current_char() == "_":
                 ident = self.read_identifier()
 

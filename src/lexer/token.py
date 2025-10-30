@@ -59,12 +59,12 @@ class TokenType(Enum):
     LABEL = auto()          # label:
 
     # Operators
-    # EQ = auto()       # ==
-    # NEQ = auto()      # !=
-    # GT = auto()       # >
-    # LT = auto()       # <
-    # GTE = auto()      # >=
-    # LTE = auto()      # <=
+    EQ = auto()       # ==
+    NEQ = auto()      # !=
+    GT = auto()       # >
+    LT = auto()       # <
+    GTE = auto()      # >=
+    LTE = auto()      # <=
 
     # Punctuation
     COMMA = auto()
