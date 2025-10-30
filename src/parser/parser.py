@@ -1,5 +1,5 @@
 from src.lexer import Token, TokenType
-from src.parser.node import *
+from src.ast.node import *
 
 
 class Parser:
