@@ -22,7 +22,7 @@ class Lexer:
     def peek_char(self, offset=1):
         if self.pos + offset >= self.s_len:
             return None
-        return self.source[self.pos + 1]
+        return self.source[self.pos + offset]
 
     def advance(self):
         if self.pos >= self.s_len:
@@ -36,7 +36,11 @@ class Lexer:
         self.pos += 1
 
     def skip_whitespace(self):
-        while self.current_char() is not None and self.current_char().isspace():
+        while (
+            self.current_char() is not None
+            and self.current_char().isspace()
+            and self.current_char() != "\n"
+        ):
             self.advance()
 
     def skip_comment(self):
