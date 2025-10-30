@@ -56,7 +56,7 @@ class TokenType(Enum):
     REGISTER = auto()       # R1, R2, etc.
     IDENTIFIER = auto()     # variable names
     NUMBER = auto()         # immediate values
-    # LABEL = auto()          # label:
+    LABEL = auto()          # label:
 
     # Operators
     # EQ = auto()       # ==
