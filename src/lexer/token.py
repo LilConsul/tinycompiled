@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from dataclasses import dataclass
+from typing import Any
 
 
 class TokenType(Enum):
@@ -77,6 +78,6 @@ class TokenType(Enum):
 @dataclass
 class Token:
     type: TokenType
-    value: any
+    value: Any
     line: int
     column: int
