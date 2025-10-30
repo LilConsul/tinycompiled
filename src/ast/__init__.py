@@ -1,8 +1,9 @@
-from .node import ASTNode, Program, VarDecl, Load, Set, Move, BinaryOp, UnaryOp, ShiftOp, Compare, Jump, Label, Function, Call, Loop, While, For, Repeat, If, Condition, Push, Pop, Print, Input, Halt, Nop
+from .node import ASTNode, Program, Return, VarDecl, Load, Set, Move, BinaryOp, UnaryOp, ShiftOp, Compare, Jump, Label, Function, Call, Loop, While, For, Repeat, If, Condition, Push, Pop, Print, Input, Halt, Nop
 
 __all__ = [
     "ASTNode",
     "Program",
+    "Return",
     "VarDecl",
     "Load",
     "Set",
