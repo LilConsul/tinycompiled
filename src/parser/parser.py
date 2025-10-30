@@ -8,6 +8,21 @@ class Parser:
         self.pos = 0
         self.t_len = len(tokens)
 
+        # Dispatch table: maps token types to parser methods
+        self._statement_handlers = {
+            TokenType.VAR: self.parse_var_decl,
+            TokenType.LOAD: self.parse_load,
+            TokenType.SET: self.parse_set,
+            TokenType.PRINT: self.parse_print,
+            TokenType.INPUT: self.parse_input,
+        }
+
+        # Simple statement handlers (no complex parsing)
+        self._simple_handlers = {
+            TokenType.HALT: lambda: Halt(),
+            TokenType.NOP: lambda: Nop(),
+        }
+
     def current_token(self) -> Token:
         if self.pos >= self.t_len:
             return self.tokens[-1]  # EOF
@@ -47,16 +62,60 @@ class Parser:
     def parse_statement(self) -> Optional[ASTNode]:
         self.skip_newlines()
         token = self.current_token()
+        token_type = token.type
 
-        if token.type == TokenType.VAR:
-            return self.parse_var_decl()
-        elif token.type == TokenType.LOAD:
-            return self.parse_load()
-        elif token.type == TokenType.SET:
-            return self.parse_set()
-        elif token.type == TokenType.MOVE:
+        # Skip newlines
+        if token_type == TokenType.NEWLINE:
+            self.advance()
+            return None
+
+        # Check direct dispatch table
+        if token_type in self._statement_handlers:
+            return self._statement_handlers[token_type]()
+
+        # Check simple handlers (HALT, NOP)
+        if token_type in self._simple_handlers:
+            self.advance()
+            return self._simple_handlers[token_type]()
+
+        # Control flow and structured statements
+        if token_type == TokenType.LABEL:
+            return self.parse_label()
+        if token_type == TokenType.IF:
+            return self.parse_if()
+        if token_type == TokenType.LOOP:
+            return self.parse_loop()
+        if token_type == TokenType.WHILE:
+            return self.parse_while()
+        if token_type == TokenType.FOR:
+            return self.parse_for()
+        if token_type == TokenType.REPEAT:
+            return self.parse_repeat()
+
+        # Functions
+        if token_type == TokenType.FUNC:
+            return self.parse_function()
+        if token_type == TokenType.CALL:
+            return self.parse_call()
+        if token_type == TokenType.RET:
+            return self.parse_return()
+
+        # Stack operations
+        if token_type == TokenType.PUSH:
+            return self.parse_push()
+        if token_type == TokenType.POP:
+            return self.parse_pop()
+
+        # Register operations
+        if token_type == TokenType.MOVE:
             return self.parse_move()
-        elif token.type in [
+        if token_type == TokenType.CMP:
+            return self.parse_compare()
+        if token_type == TokenType.NOT:
+            return self.parse_not()
+
+        # Binary operations
+        if token_type in [
             TokenType.ADD,
             TokenType.SUB,
             TokenType.MUL,
@@ -66,15 +125,17 @@ class Parser:
             TokenType.XOR,
         ]:
             return self.parse_binary_op()
-        elif token.type in [TokenType.INC, TokenType.DEC]:
+
+        # Unary operations
+        if token_type in [TokenType.INC, TokenType.DEC]:
             return self.parse_unary_op()
-        elif token.type == TokenType.NOT:
-            return self.parse_not()
-        elif token.type in [TokenType.SHL, TokenType.SHR]:
+
+        # Shift operations
+        if token_type in [TokenType.SHL, TokenType.SHR]:
             return self.parse_shift()
-        elif token.type == TokenType.CMP:
-            return self.parse_compare()
-        elif token.type in [
+
+        # Jump operations
+        if token_type in [
             TokenType.JMP,
             TokenType.JE,
             TokenType.JNE,
@@ -84,43 +145,47 @@ class Parser:
             TokenType.JLE,
         ]:
             return self.parse_jump()
-        elif token.type == TokenType.LABEL:
-            return self.parse_label()
-        elif token.type == TokenType.FUNC:
-            return self.parse_function()
-        elif token.type == TokenType.CALL:
-            return self.parse_call()
-        elif token.type == TokenType.RET:
-            return self.parse_return()
-        elif token.type == TokenType.LOOP:
-            return self.parse_loop()
-        elif token.type == TokenType.WHILE:
-            return self.parse_while()
-        elif token.type == TokenType.FOR:
-            return self.parse_for()
-        elif token.type == TokenType.REPEAT:
-            return self.parse_repeat()
-        elif token.type == TokenType.IF:
-            return self.parse_if()
-        elif token.type == TokenType.PUSH:
-            return self.parse_push()
-        elif token.type == TokenType.POP:
-            return self.parse_pop()
-        elif token.type == TokenType.PRINT:
-            return self.parse_print()
-        elif token.type == TokenType.INPUT:
-            return self.parse_input()
-        elif token.type == TokenType.HALT:
+
+        raise SyntaxError(f"Unexpected token {token_type} at line {token.line}")
+
+    def _parse_value(self, allowed_types=None):
+        """
+        Helper method to parse a value that can be a register, identifier, or number.
+        Returns the parsed value.
+
+        Args:
+            allowed_types: List of allowed TokenTypes. If None, allows REGISTER, IDENTIFIER, NUMBER
+        """
+        if allowed_types is None:
+            allowed_types = [TokenType.REGISTER, TokenType.IDENTIFIER, TokenType.NUMBER]
+
+        token = self.current_token()
+
+        if token.type in allowed_types:
             self.advance()
-            return Halt()
-        elif token.type == TokenType.NOP:
-            self.advance()
-            return Nop()
-        elif token.type == TokenType.NEWLINE:
-            self.advance()
-            return None
-        else:
-            raise SyntaxError(f"Unexpected token {token.type} at line {token.line}")
+            return token.value
+
+        # Build error message
+        allowed_names = [t.name.lower() for t in allowed_types]
+        expected = (
+            ", ".join(allowed_names[:-1])
+            + (" or " if len(allowed_names) > 1 else "")
+            + allowed_names[-1]
+        )
+        raise SyntaxError(f"Expected {expected} at line {token.line}")
+
+    def _parse_body(self, end_token: TokenType):
+        """
+        Helper method to parse a body of statements until an end token is reached.
+        Returns a list of parsed statements.
+        """
+        body = []
+        while self.current_token().type != end_token:
+            stmt = self.parse_statement()
+            if stmt:
+                body.append(stmt)
+            self.skip_newlines()
+        return body
 
     def parse_var_decl(self) -> VarDecl:
         self.expect(TokenType.VAR)
@@ -137,34 +202,14 @@ class Parser:
         self.expect(TokenType.LOAD)
         dest = self.expect(TokenType.REGISTER).value
         self.expect(TokenType.COMMA)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            src = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            src = self.expect(TokenType.IDENTIFIER).value
-        elif token.type == TokenType.NUMBER:
-            src = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(
-                f"Expected register, identifier or number at line {token.line}"
-            )
-
+        src = self._parse_value()
         return Load(dest, src)
 
     def parse_set(self) -> Set:
         self.expect(TokenType.SET)
         dest = self.expect(TokenType.IDENTIFIER).value
         self.expect(TokenType.COMMA)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            src = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.NUMBER:
-            src = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(f"Expected register or number at line {token.line}")
-
+        src = self._parse_value([TokenType.REGISTER, TokenType.NUMBER])
         return Set(dest, src)
 
     def parse_move(self) -> Move:
@@ -183,14 +228,7 @@ class Parser:
         self.expect(TokenType.COMMA)
         left = self.expect(TokenType.REGISTER).value
         self.expect(TokenType.COMMA)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            right = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.NUMBER:
-            right = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(f"Expected register or number at line {token.line}")
+        right = self._parse_value([TokenType.REGISTER, TokenType.NUMBER])
 
         return BinaryOp(op, dest, left, right)
 
@@ -198,15 +236,7 @@ class Parser:
         op_token = self.current_token()
         op = op_token.value.upper()
         self.advance()
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            operand = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            operand = self.expect(TokenType.IDENTIFIER).value
-        else:
-            raise SyntaxError(f"Expected register or identifier at line {token.line}")
-
+        operand = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
         return UnaryOp(op, operand)
 
     def parse_not(self) -> BinaryOp:
@@ -232,25 +262,9 @@ class Parser:
 
     def parse_compare(self) -> Compare:
         self.expect(TokenType.CMP)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            left = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            left = self.expect(TokenType.IDENTIFIER).value
-        else:
-            raise SyntaxError(f"Expected register or identifier at line {token.line}")
-
+        left = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
         self.expect(TokenType.COMMA)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            right = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.NUMBER:
-            right = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(f"Expected register or number at line {token.line}")
-
+        right = self._parse_value([TokenType.REGISTER, TokenType.NUMBER])
         return Compare(left, right)
 
     def parse_jump(self) -> Jump:
@@ -268,14 +282,7 @@ class Parser:
         self.expect(TokenType.FUNC)
         name = self.expect(TokenType.IDENTIFIER).value
         self.skip_newlines()
-
-        body = []
-        while self.current_token().type != TokenType.ENDFUNC:
-            stmt = self.parse_statement()
-            if stmt:
-                body.append(stmt)
-            self.skip_newlines()
-
+        body = self._parse_body(TokenType.ENDFUNC)
         self.expect(TokenType.ENDFUNC)
         return Function(name, body)
 
@@ -294,17 +301,7 @@ class Parser:
         return Return()
 
     def parse_condition(self) -> Condition:
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            left = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            left = self.expect(TokenType.IDENTIFIER).value
-        elif token.type == TokenType.NUMBER:
-            left = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(
-                f"Expected register, identifier or number at line {token.line}"
-            )
+        left = self._parse_value()
 
         op_token = self.current_token()
         if op_token.type in [
@@ -320,17 +317,7 @@ class Parser:
         else:
             raise SyntaxError(f"Expected comparison operator at line {op_token.line}")
 
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            right = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            right = self.expect(TokenType.IDENTIFIER).value
-        elif token.type == TokenType.NUMBER:
-            right = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(
-                f"Expected register, identifier or number at line {token.line}"
-            )
+        right = self._parse_value()
 
         return Condition(left, op, right)
 
@@ -340,14 +327,7 @@ class Parser:
         self.expect(TokenType.COMMA)
         limit = self.expect(TokenType.NUMBER).value
         self.skip_newlines()
-
-        body = []
-        while self.current_token().type != TokenType.ENDLOOP:
-            stmt = self.parse_statement()
-            if stmt:
-                body.append(stmt)
-            self.skip_newlines()
-
+        body = self._parse_body(TokenType.ENDLOOP)
         self.expect(TokenType.ENDLOOP)
         return Loop(var, limit, body)
 
@@ -355,14 +335,7 @@ class Parser:
         self.expect(TokenType.WHILE)
         condition = self.parse_condition()
         self.skip_newlines()
-
-        body = []
-        while self.current_token().type != TokenType.ENDWHILE:
-            stmt = self.parse_statement()
-            if stmt:
-                body.append(stmt)
-            self.skip_newlines()
-
+        body = self._parse_body(TokenType.ENDWHILE)
         self.expect(TokenType.ENDWHILE)
         return While(condition, body)
 
@@ -380,28 +353,14 @@ class Parser:
             step = self.expect(TokenType.NUMBER).value
 
         self.skip_newlines()
-
-        body = []
-        while self.current_token().type != TokenType.ENDFOR:
-            stmt = self.parse_statement()
-            if stmt:
-                body.append(stmt)
-            self.skip_newlines()
-
+        body = self._parse_body(TokenType.ENDFOR)
         self.expect(TokenType.ENDFOR)
         return For(var, start, end, step, body)
 
     def parse_repeat(self) -> Repeat:
         self.expect(TokenType.REPEAT)
         self.skip_newlines()
-
-        body = []
-        while self.current_token().type != TokenType.UNTIL:
-            stmt = self.parse_statement()
-            if stmt:
-                body.append(stmt)
-            self.skip_newlines()
-
+        body = self._parse_body(TokenType.UNTIL)
         self.expect(TokenType.UNTIL)
         condition = self.parse_condition()
 
@@ -412,6 +371,7 @@ class Parser:
         condition = self.parse_condition()
         self.skip_newlines()
 
+        # Parse then body - need special handling for ELSE/ENDIF
         then_body = []
         while self.current_token().type not in [TokenType.ELSE, TokenType.ENDIF]:
             stmt = self.parse_statement()
@@ -423,12 +383,7 @@ class Parser:
         if self.current_token().type == TokenType.ELSE:
             self.advance()
             self.skip_newlines()
-            else_body = []
-            while self.current_token().type != TokenType.ENDIF:
-                stmt = self.parse_statement()
-                if stmt:
-                    else_body.append(stmt)
-                self.skip_newlines()
+            else_body = self._parse_body(TokenType.ENDIF)
 
         self.expect(TokenType.ENDIF)
         return If(condition, then_body, else_body)
@@ -445,30 +400,10 @@ class Parser:
 
     def parse_print(self) -> Print:
         self.expect(TokenType.PRINT)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            value = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            value = self.expect(TokenType.IDENTIFIER).value
-        elif token.type == TokenType.NUMBER:
-            value = self.expect(TokenType.NUMBER).value
-        else:
-            raise SyntaxError(
-                f"Expected register, identifier or number at line {token.line}"
-            )
-
+        value = self._parse_value()
         return Print(value)
 
     def parse_input(self) -> Input:
         self.expect(TokenType.INPUT)
-
-        token = self.current_token()
-        if token.type == TokenType.REGISTER:
-            dest = self.expect(TokenType.REGISTER).value
-        elif token.type == TokenType.IDENTIFIER:
-            dest = self.expect(TokenType.IDENTIFIER).value
-        else:
-            raise SyntaxError(f"Expected register or identifier at line {token.line}")
-
+        dest = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
         return Input(dest)
