@@ -1,70 +1,71 @@
 from enum import Enum, auto
 from dataclasses import dataclass
 
+
 class TokenType(Enum):
     # Keywords
     VAR = auto()
     LOAD = auto()
     SET = auto()
-    # MOVE = auto()
-    # ADD = auto()
-    # SUB = auto()
-    # MUL = auto()
-    # DIV = auto()
-    # INC = auto()
-    # DEC = auto()
-    # AND = auto()
-    # OR = auto()
-    # XOR = auto()
-    # NOT = auto()
-    # SHL = auto()
-    # SHR = auto()
-    # CMP = auto()
-    # JMP = auto()
-    # JE = auto()
-    # JNE = auto()
-    # JG = auto()
-    # JL = auto()
-    # JGE = auto()
-    # JLE = auto()
-    # FUNC = auto()
-    # ENDFUNC = auto()
-    # CALL = auto()
-    # RET = auto()
-    # LOOP = auto()
-    # ENDLOOP = auto()
-    # WHILE = auto()
-    # ENDWHILE = auto()
-    # FOR = auto()
-    # ENDFOR = auto()
-    # FROM = auto()
-    # TO = auto()
-    # STEP = auto()
-    # REPEAT = auto()
-    # UNTIL = auto()
-    # IF = auto()
-    # ELSE = auto()
-    # ENDIF = auto()
-    # PUSH = auto()
-    # POP = auto()
+    MOVE = auto()  # TODO
+    ADD = auto()  # TODO
+    SUB = auto()  # TODO
+    MUL = auto()  # TODO
+    DIV = auto()  # TODO
+    INC = auto()  # TODO
+    DEC = auto()  # TODO
+    AND = auto()  # TODO
+    OR = auto()  # TODO
+    XOR = auto()  # TODO
+    NOT = auto()  # TODO
+    SHL = auto()  # TODO
+    SHR = auto()  # TODO
+    CMP = auto()  # TODO
+    JMP = auto()  # TODO
+    JE = auto()  # TODO
+    JNE = auto()  # TODO
+    JG = auto()  # TODO
+    JL = auto()  # TODO
+    JGE = auto()  # TODO
+    JLE = auto()  # TODO
+    FUNC = auto()  # TODO
+    ENDFUNC = auto()  # TODO
+    CALL = auto()  # TODO
+    RET = auto()  # TODO
+    LOOP = auto()  # TODO
+    ENDLOOP = auto()  # TODO
+    WHILE = auto()  # TODO
+    ENDWHILE = auto()  # TODO
+    FOR = auto()  # TODO
+    ENDFOR = auto()  # TODO
+    FROM = auto()  # TODO
+    TO = auto()  # TODO
+    STEP = auto()  # TODO
+    REPEAT = auto()  # TODO
+    UNTIL = auto()  # TODO
+    IF = auto()  # TODO
+    ELSE = auto()  # TODO
+    ENDIF = auto()  # TODO
+    PUSH = auto()  # TODO
+    POP = auto()  # TODO
     PRINT = auto()
     INPUT = auto()
     HALT = auto()
     NOP = auto()
 
     # Literals and identifiers
-    REGISTER = auto()       # R1, R2, etc.
-    IDENTIFIER = auto()     # variable names
-    NUMBER = auto()         # immediate values
-    LABEL = auto()          # label:
+    REGISTER = auto()  # R1, R2, etc.
+    IDENTIFIER = auto()  # variable names
+    NUMBER = auto()  # immediate values
+    LABEL = auto()  # label:
 
     # Operators
-    EQ = auto()       # ==
-    NEQ = auto()      # !=
-    GT = auto()       # >
-    LT = auto()       # <
-    GTE = auto()      # >=
-    LTE = auto()      # <=
+    EQ = auto()  # ==
+    NEQ = auto()  # !=
+    GT = auto()  # >
+    LT = auto()  # <
+    GTE = auto()  # >=
+    LTE = auto()  # <=
 
     # Punctuation
     COMMA = auto()
