@@ -163,10 +163,9 @@ class Lexer:
                 )
                 continue
 
-            self.advance()
-            # raise SyntaxError(
-            #     f"Unexpected character '{current}' at line {self.line}, column {self.column}"
-            # )
+            raise SyntaxError(
+                f"Unexpected character '{current}' at line {self.line}, column {self.column}"
+            )
 
         self.tokens.append(Token(TokenType.EOF, None, self.line, self.column))
         return self.tokens
