@@ -69,7 +69,7 @@ if __name__ == '__main__':
         PRINT R1
         
         LOAD R2, 20
-        PRINT R1
+        PRINT R2
         
         PRINT result
         HALT
@@ -81,6 +81,4 @@ if __name__ == '__main__':
     print(asm_output)
     print("=" * 60)
     print("\nTo assemble and run:")
-    print("  nasm -f elf64 output.asm -o output.o")
-    print("  gcc output.o -o output -no-pie")
-    print("  ./output")
+    print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
