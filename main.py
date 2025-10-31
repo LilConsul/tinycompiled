@@ -71,6 +71,10 @@ if __name__ == '__main__':
         LOAD R2, 20
         PRINT R2
         
+        ADD R3, R1, R2
+        PRINT R3
+        
+        SET result, R3
         PRINT result
         HALT
     """
@@ -81,4 +85,7 @@ if __name__ == '__main__':
     print(asm_output)
     print("=" * 60)
     print("\nTo assemble and run:")
-    print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
+    # print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
+    print("nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test")
+    with open("./test_output/test_.asm", "w") as f:
+        f.write(asm_output)

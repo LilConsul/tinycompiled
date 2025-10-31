@@ -2,15 +2,23 @@ from src.lexer import Lexer
 from src.parser import Parser
 from src.generator import NasmGenerator
 
+
 def compile_tc_to_nasm(source_code: str) -> str:
     """Compile TinyCompiled source code to NASM assembly."""
     # Lexical analysis
     lexer = Lexer(source_code)
     tokens = lexer.tokenize()
+    print("=== TOKENS ===")
+    for token in tokens:
+        print(f"  {token}")
+    print()
 
     # Syntax analysis
     parser = Parser(tokens)
     ast = parser.parse()
+    print("=== AST ===")
+    print(ast)
+    print()
 
     # Code generation
     generator = NasmGenerator()
