@@ -25,43 +25,40 @@ _start:
     syscall
 
 print_int:
-    push rbp
-    mov rbp, rsp
-    push rbx
-    push rcx
-    push rdx
-    push rsi
-    push rdi
+    mov r10, rax
 
-    mov rbx, 10
-    lea rsi, [digit_buffer + 19]
-    mov byte [rsi], 0
-    dec rsi
-    mov rcx, 0  ; sign flag
+    mov r11, 10
+    lea r12, [digit_buffer + 19]
+    mov byte [r12], 0
+    dec r12
+    xor r13, r13  ; sign flag
 
-    test rax, rax
+    test r10, r10
     jns .positive
-    neg rax
-    mov rcx, 1
+    neg r10
+    mov r13, 1
 
 .positive:
+    mov rax, r10
     xor rdx, rdx
-    div rbx
+    div r11
+    mov r10, rax  ; quotient back to r10
     add dl, '0'
-    mov [rsi], dl
-    dec rsi
-    test rax, rax
+    mov [r12], dl
+    dec r12
+    test r10, r10
     jnz .positive
 
-    test rcx, rcx
+    test r13, r13
     jz .print
-    mov byte [rsi], '-'
-    dec rsi
+    mov byte [r12], '-'
+    dec r12
 
 .print:
-    inc rsi
+    inc r12  ; r12 = start of string
     mov rdx, digit_buffer + 19
-    sub rdx, rsi
+    sub rdx, r12  ; rdx = length
+    mov rsi, r12  ; rsi = buffer pointer
     mov rax, 1
     mov rdi, 1
     syscall
@@ -72,10 +69,4 @@ print_int:
     mov rdx, 1
     syscall
 
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rbx
-    pop rbp
     ret
