@@ -295,7 +295,7 @@ class NasmGenerator:
         elif self.is_register(stmt.right):
             right_operand = self.get_register(stmt.right)
         else:
-            right_operand = f"qword [{stmt.right}]"
+            right_operand = f"[{stmt.right}]"
 
         # Generate operation
         if stmt.op == "ADD":
@@ -335,7 +335,7 @@ class NasmGenerator:
         elif self.is_register(stmt.src):
             self.emit(f"mov {dest}, {self.get_register(stmt.src)}")
         else:
-            self.emit(f"mov {dest}, qword [{stmt.src}]")
+            self.emit(f"mov {dest}, [{stmt.src}]")
 
     def generate_set(self, stmt: Set):
         """Generate SET instruction: store value to memory"""
@@ -362,7 +362,7 @@ class NasmGenerator:
         if self.is_register(stmt.dest):
             self.emit(f"mov {self.get_register(stmt.dest)}, r15")
         else:
-            self.emit(f"mov qword [{stmt.dest}], r15")
+            self.emit(f"mov [{stmt.dest}], r15")
 
     def generate_halt(self):
         """Generate HALT instruction: exit program"""
@@ -377,5 +377,5 @@ class NasmGenerator:
         elif self.is_register(value):
             self.emit(f"mov r15, {self.get_register(value)}")
         else:
-            self.emit(f"mov r15, qword [{value}]")
+            self.emit(f"mov r15, [{value}]")
 
