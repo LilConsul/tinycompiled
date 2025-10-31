@@ -9,6 +9,7 @@ from src import compile_tc_to_nasm
 def translate_tc_to_nasm(tc_code: str) -> str:
     return tc_code
 
+
 class TinyCompiledApp(App):
     tc_code = var("")
 
@@ -18,7 +19,7 @@ class TinyCompiledApp(App):
             language="python",
             show_line_numbers=True,
             soft_wrap=False,
-            tab_behavior="indent"
+            tab_behavior="indent",
         )
         self.output = Static("NASM translation will appear here.", expand=True)
         yield Horizontal(self.editor, self.output)
@@ -56,20 +57,20 @@ class TinyCompiledApp(App):
         self.output.update(nasm_code)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # TinyCompiledApp().run()
 
     # Example 1: Simple arithmetic
     example1 = """
         ; Simple program
         VAR result, 0
-        ;PRINT result
+        PRINT result
         
         LOAD R1, 10
-        ;PRINT R1
+        PRINT R1
         
         LOAD R2, 20
-        ;PRINT R2
+        PRINT R2
         
         ADD R3, R1, R2
         PRINT R3
@@ -86,6 +87,8 @@ if __name__ == '__main__':
     print("=" * 60)
     print("\nTo assemble and run:")
     # print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
-    print("nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test")
+    print(
+        "nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test"
+    )
     with open("./test_output/test_.asm", "w") as f:
         f.write(asm_output)

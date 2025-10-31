@@ -129,13 +129,18 @@ class NasmGenerator:
     def _add_print_int_function(self):
         """Generate print_int helper: converts integer in r15 to string and prints it
         Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers
-        Note: syscall destroys rcx and r11, so we save/restore them"""
+        Note: We use rax, rbx, rdx, rsi, rdi, rcx, r11 internally, so we must save them"""
         self.text_section.append("")
         self.emit_label("print_int")
 
-        # Save registers that syscall will destroy (rcx=R3, r11)
-        self.emit("push rcx")
-        self.emit("push r11")
+        # Save all registers we will use (R1-R6 mapping)
+        self.emit("push rax")  # R1
+        self.emit("push rbx")  # R2
+        self.emit("push rcx")  # R3
+        self.emit("push rdx")  # R4
+        self.emit("push rsi")  # R5
+        self.emit("push rdi")  # R6
+        self.emit("push r11")  # scratch for divisor
         self.text_section.append("")
 
         # r15 contains the value to print (passed by caller)
@@ -197,9 +202,14 @@ class NasmGenerator:
         self.emit("syscall")
         self.text_section.append("")
 
-        # Restore registers
+        # Restore registers in reverse order (LIFO)
         self.emit("pop r11")
-        self.emit("pop rcx")
+        self.emit("pop rdi")  # R6
+        self.emit("pop rsi")  # R5
+        self.emit("pop rdx")  # R4
+        self.emit("pop rcx")  # R3
+        self.emit("pop rbx")  # R2
+        self.emit("pop rax")  # R1
         self.text_section.append("")
 
         self.emit("ret")
