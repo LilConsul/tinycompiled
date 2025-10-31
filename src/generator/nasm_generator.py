@@ -128,9 +128,15 @@ class NasmGenerator:
 
     def _add_print_int_function(self):
         """Generate print_int helper: converts integer in r15 to string and prints it
-        Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
+        Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers
+        Note: syscall destroys rcx and r11, so we save/restore them"""
         self.text_section.append("")
         self.emit_label("print_int")
+
+        # Save registers that syscall will destroy (rcx=R3, r11)
+        self.emit("push rcx")
+        self.emit("push r11")
+        self.text_section.append("")
 
         # r15 contains the value to print (passed by caller)
         # r10 = working value, r11 = divisor (10), r12 = buffer pointer, r13 = sign flag
@@ -189,6 +195,11 @@ class NasmGenerator:
         self.emit("lea rsi, [newline]")
         self.emit("mov rdx, 1")
         self.emit("syscall")
+        self.text_section.append("")
+
+        # Restore registers
+        self.emit("pop r11")
+        self.emit("pop rcx")
         self.text_section.append("")
 
         self.emit("ret")
@@ -284,7 +295,7 @@ class NasmGenerator:
         elif self.is_register(stmt.right):
             right_operand = self.get_register(stmt.right)
         else:
-            right_operand = f"[{stmt.right}]"
+            right_operand = f"qword [{stmt.right}]"
 
         # Generate operation
         if stmt.op == "ADD":
@@ -324,14 +335,14 @@ class NasmGenerator:
         elif self.is_register(stmt.src):
             self.emit(f"mov {dest}, {self.get_register(stmt.src)}")
         else:
-            self.emit(f"mov {dest}, [{stmt.src}]")
+            self.emit(f"mov {dest}, qword [{stmt.src}]")
 
     def generate_set(self, stmt: Set):
         """Generate SET instruction: store value to memory"""
         if isinstance(stmt.src, int):
             self.emit(f"mov qword [{stmt.dest}], {stmt.src}")
         else:
-            self.emit(f"mov [{stmt.dest}], {self.get_register(stmt.src)}")
+            self.emit(f"mov qword [{stmt.dest}], {self.get_register(stmt.src)}")
 
     def generate_print(self, stmt: Print):
         """Generate PRINT instruction: output integer value"""
@@ -351,7 +362,7 @@ class NasmGenerator:
         if self.is_register(stmt.dest):
             self.emit(f"mov {self.get_register(stmt.dest)}, r15")
         else:
-            self.emit(f"mov [{stmt.dest}], r15")
+            self.emit(f"mov qword [{stmt.dest}], r15")
 
     def generate_halt(self):
         """Generate HALT instruction: exit program"""
@@ -366,5 +377,5 @@ class NasmGenerator:
         elif self.is_register(value):
             self.emit(f"mov r15, {self.get_register(value)}")
         else:
-            self.emit(f"mov r15, [{value}]")
+            self.emit(f"mov r15, qword [{value}]")
 
