@@ -7,64 +7,16 @@ section .text
     global _start
 
 _start:
-    push rax
-    push rbx
-    push rcx
-    push rdx
-    push rsi
-    push rdi
     mov rax, [result]
     call print_int
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rbx
-    pop rax
     mov rax, 10
-    push rax
-    push rbx
-    push rcx
-    push rdx
-    push rsi
-    push rdi
     mov rax, rax
     call print_int
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rbx
-    pop rax
     mov rbx, 20
-    push rax
-    push rbx
-    push rcx
-    push rdx
-    push rsi
-    push rdi
     mov rax, rbx
     call print_int
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rbx
-    pop rax
-    push rax
-    push rbx
-    push rcx
-    push rdx
-    push rsi
-    push rdi
     mov rax, [result]
     call print_int
-    pop rdi
-    pop rsi
-    pop rdx
-    pop rcx
-    pop rbx
-    pop rax
     mov rax, 60
     mov rdi, 0
     syscall

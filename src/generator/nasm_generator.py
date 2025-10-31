@@ -315,25 +315,20 @@ class NasmGenerator:
         """Generate PRINT instruction: output integer value"""
         self.needs_print_int = True
 
-        self._save_all_registers()
         self._load_value_to_rax(stmt.value)
         self.emit("call print_int")
-        self._restore_all_registers()
 
     def generate_input(self, stmt: Input):
         """Generate INPUT instruction: read integer from stdin"""
         self.needs_read_int = True
 
-        self._save_all_registers()
         self.emit("call read_int")
-        self.emit("mov r10, rax")
-        self._restore_all_registers()
 
-        # Store result to destination
+        # Store result from rax to destination
         if self.is_register(stmt.dest):
-            self.emit(f"mov {self.get_register(stmt.dest)}, r10")
+            self.emit(f"mov {self.get_register(stmt.dest)}, rax")
         else:
-            self.emit(f"mov [{stmt.dest}], r10")
+            self.emit(f"mov [{stmt.dest}], rax")
 
     def generate_halt(self):
         """Generate HALT instruction: exit program"""
