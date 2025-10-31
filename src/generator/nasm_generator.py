@@ -280,10 +280,50 @@ class NasmGenerator:
             self.generate_print(stmt)
         elif isinstance(stmt, Input):
             self.generate_input(stmt)
+        elif isinstance(stmt, BinaryOp):
+            self.generate_binary_op(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
+
+    def generate_binary_op(self, stmt: BinaryOp):
+        """Generate binary operation instruction"""
+        dest = self.get_register(stmt.dest)
+        left = self.get_register(stmt.left)
+
+        # Load left operand into destination register
+        if dest != left:
+            self.emit(f"mov {dest}, {left}")
+
+        # Determine right operand
+        if isinstance(stmt.right, int):
+            right_operand = str(stmt.right)
+        elif self.is_register(stmt.right):
+            right_operand = self.get_register(stmt.right)
+        else:
+            right_operand = f"[{stmt.right}]"
+
+        # Generate operation
+        if stmt.op == "ADD":
+            self.emit(f"add {dest}, {right_operand}")
+        elif stmt.op == "SUB":
+            self.emit(f"sub {dest}, {right_operand}")
+        elif stmt.op == "MUL":
+            self.emit(f"imul {dest}, {right_operand}")
+        elif stmt.op == "DIV":
+            self.emit("xor rdx, rdx")  # Clear rdx before division
+            if right_operand.isdigit():
+                self.emit(f"mov rbx, {right_operand}")
+                self.emit(f"div rbx")
+            else:
+                self.emit(f"div {right_operand}")
+        elif stmt.op == "AND":
+            self.emit(f"and {dest}, {right_operand}")
+        elif stmt.op == "OR":
+            self.emit(f"or {dest}, {right_operand}")
+        elif stmt.op == "XOR":
+            self.emit(f"xor {dest}, {right_operand}")
 
     def generate_var_decl(self, stmt: VarDecl):
         """Generate variable declaration in data or bss section"""
