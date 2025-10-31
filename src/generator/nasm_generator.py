@@ -127,52 +127,61 @@ class NasmGenerator:
             self._add_read_int_function()
 
     def _add_print_int_function(self):
-        """Generate print_int helper: converts integer in rax to string and prints it"""
+        """Generate print_int helper: converts integer in rax to string and prints it
+        Uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
         self.text_section.append("")
         self.emit_label("print_int")
 
-        # Function prologue
-        self._emit_function_prologue()
+        # Save rax value to r10 (our working register)
+        self.emit("mov r10, rax")
+        self.text_section.append("")
 
         # Convert integer to string (reverse order in buffer)
-        self.emit("mov rbx, 10")
-        self.emit(f"lea rsi, [digit_buffer + {self.DIGIT_BUFFER_SIZE - 1}]")
-        self.emit("mov byte [rsi], 0")
-        self.emit("dec rsi")
-        self.emit("mov rcx, 0  ; sign flag")
+        # r11 = divisor (10), r12 = buffer pointer, r13 = sign flag
+        self.emit("mov r11, 10")
+        self.emit(f"lea r12, [digit_buffer + {self.DIGIT_BUFFER_SIZE - 1}]")
+        self.emit("mov byte [r12], 0")
+        self.emit("dec r12")
+        self.emit("xor r13, r13  ; sign flag")
         self.text_section.append("")
 
         # Handle negative numbers
-        self.emit("test rax, rax")
+        self.emit("test r10, r10")
         self.emit("jns .positive")
-        self.emit("neg rax")
-        self.emit("mov rcx, 1")
+        self.emit("neg r10")
+        self.emit("mov r13, 1")
         self.text_section.append("")
 
-        # Convert digits
+        # Convert digits - use r10 as dividend, r14 for remainder
         self.emit_label(".positive")
+        self.emit("mov rax, r10")
         self.emit("xor rdx, rdx")
-        self.emit("div rbx")
+        self.emit("div r11")
+        self.emit("mov r10, rax  ; quotient back to r10")
         self.emit("add dl, '0'")
-        self.emit("mov [rsi], dl")
-        self.emit("dec rsi")
-        self.emit("test rax, rax")
+        self.emit("mov [r12], dl")
+        self.emit("dec r12")
+        self.emit("test r10, r10")
         self.emit("jnz .positive")
         self.text_section.append("")
 
         # Add minus sign if needed
-        self.emit("test rcx, rcx")
+        self.emit("test r13, r13")
         self.emit("jz .print")
-        self.emit("mov byte [rsi], '-'")
-        self.emit("dec rsi")
+        self.emit("mov byte [r12], '-'")
+        self.emit("dec r12")
         self.text_section.append("")
 
-        # Print the string
+        # Print the string - setup syscall parameters
         self.emit_label(".print")
-        self.emit("inc rsi")
+        self.emit("inc r12  ; r12 = start of string")
         self.emit(f"mov rdx, digit_buffer + {self.DIGIT_BUFFER_SIZE - 1}")
-        self.emit("sub rdx, rsi")
-        self._emit_write_syscall()
+        self.emit("sub rdx, r12  ; rdx = length")
+        self.emit("mov rsi, r12  ; rsi = buffer pointer")
+        self.emit(f"mov rax, {self.SYS_WRITE}")
+        self.emit(f"mov rdi, {self.STDOUT}")
+        self.emit("syscall")
+        self.text_section.append("")
 
         # Print newline
         self.emit(f"mov rax, {self.SYS_WRITE}")
@@ -182,18 +191,15 @@ class NasmGenerator:
         self.emit("syscall")
         self.text_section.append("")
 
-        # Function epilogue
-        self._emit_function_epilogue()
+        self.emit("ret")
 
     def _add_read_int_function(self):
-        """Generate read_int helper: reads integer from stdin and returns it in rax"""
+        """Generate read_int helper: reads integer from stdin and returns it in rax
+        Uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
         self.text_section.append("")
         self.emit_label("read_int")
 
-        # Function prologue
-        self._emit_function_prologue()
-
-        # Read from stdin
+        # Read from stdin using syscall (needs rax, rdi, rsi, rdx)
         self.emit(f"mov rax, {self.SYS_READ}")
         self.emit(f"mov rdi, {self.STDIN}")
         self.emit("lea rsi, [input_buffer]")
@@ -201,73 +207,48 @@ class NasmGenerator:
         self.emit("syscall")
         self.text_section.append("")
 
-        # Parse string to integer
-        self.emit("lea rsi, [input_buffer]")
-        self.emit("xor rax, rax")
-        self.emit("xor rcx, rcx  ; sign flag")
-        self.emit("mov rbx, 10")
+        # Parse string to integer using scratch registers
+        # r10 = result accumulator, r11 = multiplier (10), r12 = buffer pointer
+        # r13 = sign flag, r14 = temp for current digit
+        self.emit("lea r12, [input_buffer]")
+        self.emit("xor r10, r10  ; result = 0")
+        self.emit("xor r13, r13  ; sign flag = 0")
+        self.emit("mov r11, 10")
         self.text_section.append("")
 
         # Check for negative sign
-        self.emit("movzx rdx, byte [rsi]")
-        self.emit("cmp dl, '-'")
+        self.emit("movzx r14, byte [r12]")
+        self.emit("cmp r14b, '-'")
         self.emit("jne .parse_loop")
-        self.emit("mov rcx, 1")
-        self.emit("inc rsi")
+        self.emit("mov r13, 1  ; set sign flag")
+        self.emit("inc r12")
         self.text_section.append("")
 
         # Parse digits
         self.emit_label(".parse_loop")
-        self.emit("movzx rdx, byte [rsi]")
-        self.emit("cmp dl, '0'")
+        self.emit("movzx r14, byte [r12]")
+        self.emit("cmp r14b, '0'")
         self.emit("jb .done")
-        self.emit("cmp dl, '9'")
+        self.emit("cmp r14b, '9'")
         self.emit("ja .done")
-        self.emit("sub dl, '0'")
-        self.emit("imul rax, rbx")
-        self.emit("add rax, rdx")
-        self.emit("inc rsi")
+        self.emit("sub r14b, '0'")
+        self.emit("imul r10, r11  ; result *= 10")
+        self.emit("add r10, r14   ; result += digit")
+        self.emit("inc r12")
         self.emit("jmp .parse_loop")
         self.text_section.append("")
 
-        # Apply sign
         self.emit_label(".done")
-        self.emit("test rcx, rcx")
+        self.emit("mov rax, r10")
+        self.emit("test r13, r13")
         self.emit("jz .return")
         self.emit("neg rax")
         self.text_section.append("")
 
-        # Function epilogue
         self.emit_label(".return")
-        self._emit_function_epilogue()
-
-    def _emit_function_prologue(self):
-        """Emit standard function prologue with register preservation"""
-        self.emit("push rbp")
-        self.emit("mov rbp, rsp")
-        self.emit("push rbx")
-        self.emit("push rcx")
-        self.emit("push rdx")
-        self.emit("push rsi")
-        self.emit("push rdi")
-        self.text_section.append("")
-
-    def _emit_function_epilogue(self):
-        """Emit standard function epilogue with register restoration"""
-        self.emit("pop rdi")
-        self.emit("pop rsi")
-        self.emit("pop rdx")
-        self.emit("pop rcx")
-        self.emit("pop rbx")
-        self.emit("pop rbp")
         self.emit("ret")
 
-    def _emit_write_syscall(self):
-        """Emit write syscall to stdout"""
-        self.emit(f"mov rax, {self.SYS_WRITE}")
-        self.emit(f"mov rdi, {self.STDOUT}")
-        self.emit("syscall")
-        self.text_section.append("")
+
 
     def generate_statement(self, stmt: ASTNode):
         if isinstance(stmt, VarDecl):
@@ -385,12 +366,3 @@ class NasmGenerator:
         else:
             self.emit(f"mov rax, [{value}]")
 
-    def _save_all_registers(self):
-        """Save all general-purpose registers on the stack"""
-        for reg in self.REGISTER_MAP.values():
-            self.emit(f"push {reg}")
-
-    def _restore_all_registers(self):
-        """Restore all general-purpose registers from the stack"""
-        for reg in reversed(list(self.REGISTER_MAP.values())):
-            self.emit(f"pop {reg}")
