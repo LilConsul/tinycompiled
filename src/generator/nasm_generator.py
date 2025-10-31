@@ -295,10 +295,6 @@ class NasmGenerator:
         dest = self.get_register(stmt.dest)
         left = self.get_register(stmt.left)
 
-        # Load left operand into destination register
-        if dest != left:
-            self.emit(f"mov {dest}, {left}")
-
         # Determine right operand
         if isinstance(stmt.right, int):
             right_operand = str(stmt.right)
@@ -307,26 +303,64 @@ class NasmGenerator:
         else:
             right_operand = f"[{stmt.right}]"
 
-        # Generate operation
-        if stmt.op == "ADD":
-            self.emit(f"add {dest}, {right_operand}")
-        elif stmt.op == "SUB":
-            self.emit(f"sub {dest}, {right_operand}")
-        elif stmt.op == "MUL":
-            self.emit(f"imul {dest}, {right_operand}")
-        elif stmt.op == "DIV":
-            self.emit("xor rdx, rdx")  # Clear rdx before division
-            if right_operand.isdigit():
-                self.emit(f"mov rbx, {right_operand}")
-                self.emit(f"div rbx")
+        # DIV is special - it uses rax/rdx implicitly
+        if stmt.op == "DIV":
+            # Always save rdx since DIV clobbers it
+            if dest != "rdx":
+                self.emit("push rdx")
+
+            # Save rax if we'll clobber it and it's not the destination
+            # This includes the case where left == rax but dest != rax
+            save_rax = (dest != "rax")
+            if save_rax:
+                self.emit("push rax")
+
+            # Move dividend to rax if not already there
+            if left != "rax":
+                self.emit(f"mov rax, {left}")
+
+            # Clear rdx for unsigned division
+            self.emit("xor rdx, rdx")
+
+            # Perform division
+            if isinstance(stmt.right, int):
+                # Immediate values need to go through a register
+                self.emit("push r10")
+                self.emit(f"mov r10, {stmt.right}")
+                self.emit("div r10")
+                self.emit("pop r10")
             else:
                 self.emit(f"div {right_operand}")
-        elif stmt.op == "AND":
-            self.emit(f"and {dest}, {right_operand}")
-        elif stmt.op == "OR":
-            self.emit(f"or {dest}, {right_operand}")
-        elif stmt.op == "XOR":
-            self.emit(f"xor {dest}, {right_operand}")
+
+            # Move quotient to destination if not rax
+            if dest != "rax":
+                self.emit(f"mov {dest}, rax")
+
+            # Restore rax if we saved it
+            if save_rax:
+                self.emit("pop rax")
+
+            # Restore rdx
+            if dest != "rdx":
+                self.emit("pop rdx")
+        else:
+            # For other operations, load left operand into destination register
+            if dest != left:
+                self.emit(f"mov {dest}, {left}")
+
+            # Generate operation
+            if stmt.op == "ADD":
+                self.emit(f"add {dest}, {right_operand}")
+            elif stmt.op == "SUB":
+                self.emit(f"sub {dest}, {right_operand}")
+            elif stmt.op == "MUL":
+                self.emit(f"imul {dest}, {right_operand}")
+            elif stmt.op == "AND":
+                self.emit(f"and {dest}, {right_operand}")
+            elif stmt.op == "OR":
+                self.emit(f"or {dest}, {right_operand}")
+            elif stmt.op == "XOR":
+                self.emit(f"xor {dest}, {right_operand}")
 
     def generate_var_decl(self, stmt: VarDecl):
         """Generate variable declaration in data or bss section"""
