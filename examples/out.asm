@@ -85,7 +85,7 @@ print_int:
     lea rsi, [digit_buffer + 19]
     mov byte [rsi], 0
     dec rsi
-    mov rcx, 0
+    mov rcx, 0  ; sign flag
 
     test rax, rax
     jns .positive
@@ -110,7 +110,6 @@ print_int:
     inc rsi
     mov rdx, digit_buffer + 19
     sub rdx, rsi
-
     mov rax, 1
     mov rdi, 1
     syscall
