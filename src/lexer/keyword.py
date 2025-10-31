@@ -6,7 +6,7 @@ KEYWORD_DICT = {
     "SET": TokenType.SET,
 
     # "MOVE": TokenType.MOVE,
-    # "ADD": TokenType.ADD,
+    "ADD": TokenType.ADD,
     # "SUB": TokenType.SUB,
     # "MUL": TokenType.MUL,
     # "DIV": TokenType.DIV,
