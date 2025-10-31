@@ -63,13 +63,13 @@ if __name__ == '__main__':
     example1 = """
         ; Simple program
         VAR result, 0
-        PRINT result
+        ;PRINT result
         
         LOAD R1, 10
-        PRINT R1
+        ;PRINT R1
         
         LOAD R2, 20
-        PRINT R2
+        ;PRINT R2
         
         ADD R3, R1, R2
         PRINT R3
