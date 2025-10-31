@@ -127,17 +127,17 @@ class NasmGenerator:
             self._add_read_int_function()
 
     def _add_print_int_function(self):
-        """Generate print_int helper: converts integer in rax to string and prints it
-        Uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
+        """Generate print_int helper: converts integer in r15 to string and prints it
+        Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
         self.text_section.append("")
         self.emit_label("print_int")
 
-        # Save rax value to r10 (our working register)
-        self.emit("mov r10, rax")
+        # r15 contains the value to print (passed by caller)
+        # r10 = working value, r11 = divisor (10), r12 = buffer pointer, r13 = sign flag
+        self.emit("mov r10, r15")
         self.text_section.append("")
 
         # Convert integer to string (reverse order in buffer)
-        # r11 = divisor (10), r12 = buffer pointer, r13 = sign flag
         self.emit("mov r11, 10")
         self.emit(f"lea r12, [digit_buffer + {self.DIGIT_BUFFER_SIZE - 1}]")
         self.emit("mov byte [r12], 0")
@@ -152,7 +152,7 @@ class NasmGenerator:
         self.emit("mov r13, 1")
         self.text_section.append("")
 
-        # Convert digits - use r10 as dividend, r14 for remainder
+        # Convert digits - need to use rax/rdx for division
         self.emit_label(".positive")
         self.emit("mov rax, r10")
         self.emit("xor rdx, rdx")
@@ -172,7 +172,7 @@ class NasmGenerator:
         self.emit("dec r12")
         self.text_section.append("")
 
-        # Print the string - setup syscall parameters
+        # Print the string - syscall clobbers rax, rdi, rsi, rdx but we don't care
         self.emit_label(".print")
         self.emit("inc r12  ; r12 = start of string")
         self.emit(f"mov rdx, digit_buffer + {self.DIGIT_BUFFER_SIZE - 1}")
@@ -194,12 +194,12 @@ class NasmGenerator:
         self.emit("ret")
 
     def _add_read_int_function(self):
-        """Generate read_int helper: reads integer from stdin and returns it in rax
+        """Generate read_int helper: reads integer from stdin and returns it in r15
         Uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
         self.text_section.append("")
         self.emit_label("read_int")
 
-        # Read from stdin using syscall (needs rax, rdi, rsi, rdx)
+        # Read from stdin using syscall (clobbers rax, rdi, rsi, rdx but we don't care)
         self.emit(f"mov rax, {self.SYS_READ}")
         self.emit(f"mov rdi, {self.STDIN}")
         self.emit("lea rsi, [input_buffer]")
@@ -238,11 +238,12 @@ class NasmGenerator:
         self.emit("jmp .parse_loop")
         self.text_section.append("")
 
+        # Apply sign and return result in r15
         self.emit_label(".done")
-        self.emit("mov rax, r10")
+        self.emit("mov r15, r10")
         self.emit("test r13, r13")
         self.emit("jz .return")
-        self.emit("neg rax")
+        self.emit("neg r15")
         self.text_section.append("")
 
         self.emit_label(".return")
@@ -296,7 +297,8 @@ class NasmGenerator:
         """Generate PRINT instruction: output integer value"""
         self.needs_print_int = True
 
-        self._load_value_to_rax(stmt.value)
+        # Load value to r15 (scratch register) to avoid clobbering R1-R8
+        self._load_value_to_r15(stmt.value)
         self.emit("call print_int")
 
     def generate_input(self, stmt: Input):
@@ -305,11 +307,11 @@ class NasmGenerator:
 
         self.emit("call read_int")
 
-        # Store result from rax to destination
+        # Store result from r15 (scratch register) to destination
         if self.is_register(stmt.dest):
-            self.emit(f"mov {self.get_register(stmt.dest)}, rax")
+            self.emit(f"mov {self.get_register(stmt.dest)}, r15")
         else:
-            self.emit(f"mov [{stmt.dest}], rax")
+            self.emit(f"mov [{stmt.dest}], r15")
 
     def generate_halt(self):
         """Generate HALT instruction: exit program"""
@@ -317,12 +319,12 @@ class NasmGenerator:
         self.emit("mov rdi, 0")
         self.emit("syscall")
 
-    def _load_value_to_rax(self, value):
-        """Load a value (immediate, register, or variable) into rax"""
+    def _load_value_to_r15(self, value):
+        """Load a value (immediate, register, or variable) into r15 (scratch register)"""
         if isinstance(value, int):
-            self.emit(f"mov rax, {value}")
+            self.emit(f"mov r15, {value}")
         elif self.is_register(value):
-            self.emit(f"mov rax, {self.get_register(value)}")
+            self.emit(f"mov r15, {self.get_register(value)}")
         else:
-            self.emit(f"mov rax, [{value}]")
+            self.emit(f"mov r15, [{value}]")
 

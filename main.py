@@ -59,20 +59,35 @@ class TinyCompiledApp(App):
 if __name__ == '__main__':
     # TinyCompiledApp().run()
 
-    # Example 1: Simple arithmetic
     example1 = """
-        ; Simple program
-        VAR result, 0
-        PRINT result
+        LOAD R1, 1
+        LOAD R2, 2
+        LOAD R3, 3
+        LOAD R4, 4
+        LOAD R5, 5
+        LOAD R6, 6
+        LOAD R7, 7
+        LOAD R8, 8
         
-        LOAD R1, 10
+        ; Print all registers once
         PRINT R1
-        
-        LOAD R2, 20
         PRINT R2
+        PRINT R3
+        PRINT R4
+        PRINT R5
+        PRINT R6
+        PRINT R7
+        PRINT R8
         
-        PRINT result
-        HALT
+        ; Print all registers again - values should be preserved!
+        PRINT R1
+        PRINT R2
+        PRINT R3
+        PRINT R4
+        PRINT R5
+        PRINT R6
+        PRINT R7
+        PRINT R8
     """
 
     print("Compiling TinyCompiled to NASM...")
