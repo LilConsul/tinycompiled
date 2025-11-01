@@ -137,11 +137,11 @@ CALL add_numbers
 
 ## 6. Loop Constructs
 
-- [ ] `LOOP identifier, immediate` / `ENDLOOP` - Loop while var < limit
-- [ ] `WHILE condition` / `ENDWHILE` - Loop while condition is true
-- [ ] `FOR identifier FROM immediate TO immediate` / `ENDFOR` - Range loop
-- [ ] `FOR identifier FROM immediate TO immediate STEP immediate` / `ENDFOR` - Range loop with step
-- [ ] `REPEAT` / `UNTIL condition` - Post-condition loop
+- [x] `LOOP identifier, immediate` / `ENDLOOP` - Loop while var < limit
+- [x] `WHILE condition` / `ENDWHILE` - Loop while condition is true
+- [x] `FOR identifier FROM immediate TO immediate` / `ENDFOR` - Range loop
+- [x] `FOR identifier FROM immediate TO immediate STEP immediate` / `ENDFOR` - Range loop with step
+- [x] `REPEAT` / `UNTIL condition` - Post-condition loop
 
 **Examples:**
 

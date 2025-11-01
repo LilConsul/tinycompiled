@@ -309,6 +309,14 @@ class NasmGenerator:
             self.generate_return(stmt)
         elif isinstance(stmt, If):
             self.generate_if(stmt)
+        elif isinstance(stmt, Loop):
+            self.generate_loop(stmt)
+        elif isinstance(stmt, While):
+            self.generate_while(stmt)
+        elif isinstance(stmt, For):
+            self.generate_for(stmt)
+        elif isinstance(stmt, Repeat):
+            self.generate_repeat(stmt)
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
@@ -547,15 +555,111 @@ class NasmGenerator:
         self.emit("cmp r10, r11")
 
         # Jump based on op
-        if cond.op == "EQ":
+        if cond.op == "==":
             self.emit(f"jne {false_label}")
-        elif cond.op == "NEQ":
+        elif cond.op == "!=":
             self.emit(f"je {false_label}")
-        elif cond.op == "GT":
+        elif cond.op == ">":
             self.emit(f"jle {false_label}")
-        elif cond.op == "LT":
+        elif cond.op == "<":
             self.emit(f"jge {false_label}")
-        elif cond.op == "GTE":
+        elif cond.op == ">=":
             self.emit(f"jl {false_label}")
-        elif cond.op == "LTE":
+        elif cond.op == "<=":
             self.emit(f"jg {false_label}")
+
+    def generate_loop(self, stmt: Loop):
+        """Generate LOOP var, limit / ENDLOOP - loop while var < limit"""
+        start_label = f"loop_start_{self.label_counter}"
+        end_label = f"loop_end_{self.label_counter}"
+        self.label_counter += 1
+
+        # Initialize var to 0
+        self.emit(f"mov qword [{stmt.var}], 0")
+
+        self.emit_label(start_label)
+
+        # Compare var < limit
+        self.emit(f"mov r10, [{stmt.var}]")
+        self.emit(f"mov r11, {stmt.limit}")
+        self.emit("cmp r10, r11")
+        self.emit(f"jge {end_label}")
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Increment var
+        self.emit(f"inc qword [{stmt.var}]")
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_while(self, stmt: While):
+        """Generate WHILE condition / ENDWHILE - loop while condition is true"""
+        start_label = f"while_start_{self.label_counter}"
+        end_label = f"while_end_{self.label_counter}"
+        self.label_counter += 1
+
+        self.emit_label(start_label)
+
+        self.generate_condition(stmt.condition, end_label)
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_for(self, stmt: For):
+        """Generate FOR var FROM start TO end [STEP step] / ENDFOR - range loop"""
+        # Declare the variable if not already declared
+        if stmt.var not in self.variables:
+            self.variables[stmt.var] = True
+            self.emit_bss(f"{stmt.var} resq 1")
+
+        start_label = f"for_start_{self.label_counter}"
+        end_label = f"for_end_{self.label_counter}"
+        self.label_counter += 1
+
+        # Initialize var to start
+        self.emit(f"mov qword [{stmt.var}], {stmt.start}")
+
+        self.emit_label(start_label)
+
+        # Compare var > end (assuming step > 0)
+        self.emit(f"mov r10, [{stmt.var}]")
+        self.emit(f"mov r11, {stmt.end}")
+        self.emit("cmp r10, r11")
+        self.emit(f"jg {end_label}")
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Increment var by step
+        if stmt.step == 1:
+            self.emit(f"inc qword [{stmt.var}]")
+        else:
+            self.emit(f"add qword [{stmt.var}], {stmt.step}")
+
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_repeat(self, stmt: Repeat):
+        """Generate REPEAT / UNTIL condition - post-condition loop"""
+        start_label = f"repeat_start_{self.label_counter}"
+        self.label_counter += 1
+
+        self.emit_label(start_label)
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Condition - if false, jump back
+        self.generate_condition(stmt.condition, start_label)
+
