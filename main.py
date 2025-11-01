@@ -1,17 +1,60 @@
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal
-from textual.widgets import TextArea, Static
+from textual.containers import Horizontal, Container
+from textual.widgets import TextArea, Static, Footer, Button, Label, Input
 from textual.reactive import var
+from textual.screen import ModalScreen
+from pathlib import Path
 
 from src import compile_tc_to_nasm
 
 
-def translate_tc_to_nasm(tc_code: str) -> str:
-    return tc_code
+class SaveDialog(ModalScreen[tuple[str, str]]):
+    """Modal dialog for saving files."""
+
+    def __init__(self, tc_code: str, asm_code: str):
+        super().__init__()
+        self.tc_code = tc_code
+        self.asm_code = asm_code
+
+    def compose(self) -> ComposeResult:
+        with Container(id="save-dialog"):
+            yield Label("Save File", id="dialog-title")
+            yield Label("Choose file type and enter filename:")
+            yield Input(placeholder="filename (without extension)", id="filename-input")
+            with Horizontal(id="button-container"):
+                yield Button("Save .tc", variant="primary", id="save-tc")
+                yield Button("Save .asm", variant="success", id="save-asm")
+                yield Button("Cancel", variant="default", id="cancel")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "cancel":
+            self.dismiss(None)
+        else:
+            filename_input = self.query_one("#filename-input", Input)
+            filename = filename_input.value.strip()
+
+            if not filename:
+                return
+
+            if event.button.id == "save-tc":
+                filepath = f"{filename}.tc"
+                content = self.tc_code
+            else:  # save-asm
+                filepath = f"{filename}.asm"
+                content = self.asm_code
+
+            self.dismiss((filepath, content))
 
 
 class TinyCompiledApp(App):
+    CSS_PATH = "src/main.css"
+    BINDINGS = [
+        ("ctrl+r", "recompile", "Recompile"),
+        ("ctrl+s", "save", "Save File"),
+    ]
+
     tc_code = var("")
+    nasm_code = var("")
 
     def compose(self) -> ComposeResult:
         self.editor = TextArea(
@@ -23,97 +66,36 @@ class TinyCompiledApp(App):
         )
         self.output = Static("NASM translation will appear here.", expand=True)
         yield Horizontal(self.editor, self.output)
+        yield Footer()
 
     def on_mount(self) -> None:
-        # Soft lavender background
-        self.screen.styles.background = "#2d1b4e"
-
-        # Container styling
-        horizontal = self.query_one(Horizontal)
-        horizontal.styles.height = "100%"
-        horizontal.styles.background = "#2d1b4e"
-
-        # Editor - soft purple with rounded border
-        self.editor.styles.width = "1fr"
-        self.editor.styles.height = "100%"
-        self.editor.styles.border = ("round", "#b794f6")
-        self.editor.styles.background = "#3d2b5f"
-        self.editor.styles.padding = (1, 2)
-
-        # Output - lighter soft purple with accent border
-        self.output.styles.width = "1fr"
-        self.output.styles.height = "100%"
-        self.output.styles.border = ("round", "#d4b5ff")
-        self.output.styles.background = "#4a3470"
-        self.output.styles.color = "#f0e6ff"
-        self.output.styles.padding = (2, 3)
-        self.output.styles.overflow_y = "auto"
-
         self.editor.focus()
 
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
         self.tc_code = event.text_area.text
-        nasm_code = translate_tc_to_nasm(self.tc_code)
-        self.output.update(nasm_code)
+        # self.nasm_code = compile_tc_to_nasm(self.tc_code)
+        # self.output.update(self.nasm_code)
+
+    def action_recompile(self) -> None:
+        """Recompile the current code."""
+        try:
+            self.nasm_code = compile_tc_to_nasm(self.tc_code)
+        except Exception as e:
+            self.nasm_code = f"Error during compilation:\n{e}"
+        self.output.update(self.nasm_code)
+
+    async def action_save(self) -> None:
+        """Open save dialog."""
+        result = await self.push_screen_wait(SaveDialog(self.tc_code, self.nasm_code))
+        if result:
+            filepath, content = result
+            try:
+                Path(filepath).write_text(content, encoding="utf-8")
+                self.notify(f"Saved to {filepath}", severity="information")
+            except Exception as e:
+                self.notify(f"Error saving file: {e}", severity="error")
 
 
 if __name__ == "__main__":
-    # TinyCompiledApp().run()
-
-    # Example 1: PUSH/POP and Comparison Operators Test
-    example1 = """
-; Fibonacci function in TinyCompiled
-; Computes the nth Fibonacci number iteratively
-; Assumes VAR n is set before calling
-
-FUNC fibonacci
-    ; Handle base cases
-    IF n == 0
-        LOAD R1, 0
-        RET R1
-    ENDIF
+    TinyCompiledApp().run()
     
-    IF n == 1
-        LOAD R1, 1
-        RET R1
-    ENDIF
-    
-    ; Initialize for iterative calculation
-    VAR a, 0
-    VAR b, 1
-    VAR i, 2
-    
-    ; Loop from 2 to n
-    WHILE i <= n
-        LOAD R1, a
-        LOAD R2, b
-        ADD R3, R1, R2    ; temp = a + b
-        SET a, R2         ; a = b
-        SET b, R3         ; b = temp
-        INC i
-    ENDWHILE
-    
-    ; Return the result in b
-    LOAD R1, b
-    RET R1
-ENDFUNC
-
-; Main program example
-VAR n, 10
-CALL fibonacci
-PRINT R1
-HALT
-    """
-
-    print("Compiling TinyCompiled to NASM...")
-    print("=" * 60)
-    asm_output = compile_tc_to_nasm(example1)
-    print(asm_output)
-    print("=" * 60)
-    print("\nTo assemble and run:")
-    # print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
-    print(
-        "nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test"
-    )
-    with open("./test_output/test_.asm", "w") as f:
-        f.write(asm_output)
