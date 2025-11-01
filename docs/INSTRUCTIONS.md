@@ -12,24 +12,24 @@
 - [x] `MOVE register, register` - Copy between registers
 
 ## 3. Arithmetic Operations
-- [ ] `ADD register, register, register` - Addition (3 registers)
-- [ ] `ADD register, register, immediate` - Addition (register + immediate)
-- [ ] `SUB register, register, register` - Subtraction
-- [ ] `SUB register, register, immediate` - Subtraction (register - immediate)
-- [ ] `MUL register, register, register` - Multiplication
-- [ ] `MUL register, register, immediate` - Multiplication (register * immediate)
-- [ ] `DIV register, register, register` - Division
-- [ ] `DIV register, register, immediate` - Division (register / immediate)
-- [ ] `INC register` - Increment register
-- [ ] `INC identifier` - Increment variable
-- [ ] `DEC register` - Decrement register
-- [ ] `DEC identifier` - Decrement variable
+- [x] `ADD register, register, register` - Addition (3 registers)
+- [x] `ADD register, register, immediate` - Addition (register + immediate)
+- [x] `SUB register, register, register` - Subtraction
+- [x] `SUB register, register, immediate` - Subtraction (register - immediate)
+- [x] `MUL register, register, register` - Multiplication
+- [x] `MUL register, register, immediate` - Multiplication (register * immediate)
+- [x] `DIV register, register, register` - Division
+- [x] `DIV register, register, immediate` - Division (register / immediate)
+- [x] `INC register` - Increment register
+- [x] `INC identifier` - Increment variable
+- [x] `DEC register` - Decrement register
+- [x] `DEC identifier` - Decrement variable
 
 ## 4. Logical/Bitwise Operations
-- [ ] `AND register, register, register` - Bitwise AND
-- [ ] `OR register, register, register` - Bitwise OR
-- [ ] `XOR register, register, register` - Bitwise XOR
-- [ ] `NOT register` - Bitwise NOT (in-place)
+- [x] `AND register, register, register` - Bitwise AND
+- [x] `OR register, register, register` - Bitwise OR
+- [x] `XOR register, register, register` - Bitwise XOR
+- [x] `NOT register` - Bitwise NOT (in-place)
 - [ ] `SHL register, register, immediate` - Shift left
 - [ ] `SHR register, register, immediate` - Shift right
 

@@ -60,18 +60,18 @@ MOVE R2, R1         ; R2 = R1
 ---
 
 ## 3. Arithmetic Operations
-- [ ] `ADD register, register, register` - Addition (dest = src1 + src2)
-- [ ] `ADD register, register, immediate` - Addition (dest = src + immediate)
-- [ ] `SUB register, register, register` - Subtraction (dest = src1 - src2)
-- [ ] `SUB register, register, immediate` - Subtraction (dest = src - immediate)
-- [ ] `MUL register, register, register` - Multiplication (dest = src1 * src2)
-- [ ] `MUL register, register, immediate` - Multiplication (dest = src * immediate)
-- [ ] `DIV register, register, register` - Division (dest = src1 / src2)
-- [ ] `DIV register, register, immediate` - Division (dest = src / immediate)
-- [ ] `INC register` - Increment register by 1
-- [ ] `INC identifier` - Increment variable by 1
-- [ ] `DEC register` - Decrement register by 1
-- [ ] `DEC identifier` - Decrement variable by 1
+- [x] `ADD register, register, register` - Addition (dest = src1 + src2)
+- [x] `ADD register, register, immediate` - Addition (dest = src + immediate)
+- [x] `SUB register, register, register` - Subtraction (dest = src1 - src2)
+- [x] `SUB register, register, immediate` - Subtraction (dest = src - immediate)
+- [x] `MUL register, register, register` - Multiplication (dest = src1 * src2)
+- [x] `MUL register, register, immediate` - Multiplication (dest = src * immediate)
+- [x] `DIV register, register, register` - Division (dest = src1 / src2)
+- [x] `DIV register, register, immediate` - Division (dest = src / immediate)
+- [x] `INC register` - Increment register by 1
+- [x] `INC identifier` - Increment variable by 1
+- [x] `DEC register` - Decrement register by 1
+- [x] `DEC identifier` - Decrement variable by 1
 
 **Examples:**
 ```tc
@@ -87,10 +87,10 @@ DEC counter         ; counter--
 ---
 
 ## 4. Logical/Bitwise Operations
-- [ ] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
-- [ ] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
-- [ ] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
-- [ ] `NOT register` - Bitwise NOT (register = ~register)
+- [x] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
+- [x] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
+- [x] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
+- [x] `NOT register` - Bitwise NOT (register = ~register)
 - [ ] `SHL register, register, immediate` - Shift left (dest = src << count)
 - [ ] `SHR register, register, immediate` - Shift right (dest = src >> count)
 
