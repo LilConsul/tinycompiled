@@ -238,12 +238,11 @@ NOP                 ; Placeholder
 
 ## 11. Language Features
 
-- [ ] **Registers:** R1, R2, R3, R4, R5, R6, R7, R8
-- [ ] **Labels:** `label_name:` syntax (for jumps only)
-- [ ] **Functions:** Named, reusable code blocks
-- [ ] **Comments:** `;` single-line comments
-- [ ] **Literals:** Decimal (42), Hex (0x2A), Binary (0b1010)
-- [ ] **Identifiers:** Letters, digits, underscore (must start with letter/underscore)
+- [x] **Registers:** R1, R2, R3, R4, R5, R6, R7, R8
+- [x] **Functions:** Named, reusable code blocks
+- [x] **Comments:** `;` single-line comments
+- [x] **Literals:** Decimal (42), Hex (0x2A), Binary (0b1010)
+- [x] **Identifiers:** Letters, digits, underscore (must start with letter/underscore)
 
 ---
 
