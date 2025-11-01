@@ -117,10 +117,10 @@ SHR R2, R1, 3       ; R2 = R1 >> 3
 
 ## 5. Functions
 
-- [ ] `FUNC identifier` / `ENDFUNC` - Function definition
-- [ ] `CALL identifier` - Call function by name
-- [ ] `RET` - Return from function
-- [ ] `RET register` - Return with value in register
+- [x] `FUNC identifier` / `ENDFUNC` - Function definition
+- [x] `CALL identifier` - Call function by name
+- [x] `RET` - Return from function
+- [x] `RET register` - Return with value in register
 
 **Examples:**
 
