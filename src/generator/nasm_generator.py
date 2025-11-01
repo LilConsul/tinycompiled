@@ -37,6 +37,7 @@ class NasmGenerator:
         self.variables = {}
         self.needs_print_int = False
         self.needs_read_int = False
+        self.functions = []
 
     def get_register(self, reg: str) -> str:
         """Convert virtual register name to actual x86-64 register"""
@@ -75,14 +76,20 @@ class NasmGenerator:
         self.data_section.append("section .data")
         self.bss_section.append("section .bss")
         self.text_section.append("section .text")
-        self.emit("global _start", )
+        self.emit(
+            "global _start",
+        )
         self.text_section.append("")
         self.emit_label("_start")
+        self.emit("jmp main_code")
 
     def _generate_program_body(self, ast: Program):
         """Generate code for all statements in the program"""
+        self.emit_label("main_code")
         for stmt in ast.statements:
             self.generate_statement(stmt)
+        for func in self.functions:
+            self.generate_function(func)
 
     def _finalize_program(self):
         """Add I/O buffers, exit code, and helper functions"""
@@ -220,7 +227,7 @@ class NasmGenerator:
         self.text_section.append("")
         self.emit_label("read_int")
 
-        # Read from stdin using syscall (clobbers rax, rdi, rsi, rdx but we don't care)
+        # Read from stdin using syscall (clobbers rax, rdi, ssi, rdx but we don't care)
         self.emit(f"mov rax, {self.SYS_READ}")
         self.emit(f"mov rdi, {self.STDIN}")
         self.emit("lea rsi, [input_buffer]")
@@ -270,25 +277,80 @@ class NasmGenerator:
         self.emit_label(".return")
         self.emit("ret")
 
-
-
     def generate_statement(self, stmt: ASTNode):
-        if isinstance(stmt, VarDecl):
+        if isinstance(stmt, Function):
+            self.functions.append(stmt)
+            return
+        elif isinstance(stmt, VarDecl):
             self.generate_var_decl(stmt)
         elif isinstance(stmt, Load):
             self.generate_load(stmt)
         elif isinstance(stmt, Set):
             self.generate_set(stmt)
+        elif isinstance(stmt, Move):
+            self.generate_move(stmt)
         elif isinstance(stmt, Print):
             self.generate_print(stmt)
         elif isinstance(stmt, Input):
             self.generate_input(stmt)
         elif isinstance(stmt, BinaryOp):
             self.generate_binary_op(stmt)
+        elif isinstance(stmt, UnaryOp):
+            self.generate_unary_op(stmt)
+        elif isinstance(stmt, ShiftOp):
+            self.generate_shift(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
+        elif isinstance(stmt, Call):
+            self.generate_call(stmt)
+        elif isinstance(stmt, Return):
+            self.generate_return(stmt)
+        elif isinstance(stmt, If):
+            self.generate_if(stmt)
+        elif isinstance(stmt, Loop):
+            self.generate_loop(stmt)
+        elif isinstance(stmt, While):
+            self.generate_while(stmt)
+        elif isinstance(stmt, For):
+            self.generate_for(stmt)
+        elif isinstance(stmt, Repeat):
+            self.generate_repeat(stmt)
+        elif isinstance(stmt, Push):
+            self.generate_push(stmt)
+        elif isinstance(stmt, Pop):
+            self.generate_pop(stmt)
+
+    def generate_unary_op(self, stmt: UnaryOp):
+        """Generate unary operation instruction"""
+        if self.is_register(stmt.operand):
+            operand = self.get_register(stmt.operand)
+        else:
+            operand = f"qword [{stmt.operand}]"
+
+        if stmt.op == "INC":
+            self.emit(f"inc {operand}")
+        elif stmt.op == "DEC":
+            self.emit(f"dec {operand}")
+        elif stmt.op == "NOT":
+            self.emit(f"not {operand}")
+
+    def generate_shift(self, stmt: ShiftOp):
+        """Generate shift operation instruction"""
+        dest = self.get_register(stmt.dest)
+        src = self.get_register(stmt.src)
+        count = stmt.count
+
+        # Move src to dest if not the same
+        if dest != src:
+            self.emit(f"mov {dest}, {src}")
+
+        # Perform shift
+        if stmt.op == "SHL":
+            self.emit(f"shl {dest}, {count}")
+        elif stmt.op == "SHR":
+            self.emit(f"shr {dest}, {count}")
 
     def generate_binary_op(self, stmt: BinaryOp):
         """Generate binary operation instruction"""
@@ -311,7 +373,7 @@ class NasmGenerator:
 
             # Save rax if we'll clobber it and it's not the destination
             # This includes the case where left == rax but dest != rax
-            save_rax = (dest != "rax")
+            save_rax = dest != "rax"
             if save_rax:
                 self.emit("push rax")
 
@@ -388,6 +450,23 @@ class NasmGenerator:
         else:
             self.emit(f"mov qword [{stmt.dest}], {self.get_register(stmt.src)}")
 
+    def generate_move(self, stmt: Move):
+        """Generate MOVE instruction: move value between registers or memory"""
+        dest = self.get_register(stmt.dest)
+        src = stmt.src
+
+        # If src is a register, just move it directly
+        if self.is_register(src):
+            self.emit(f"mov {dest}, {self.get_register(src)}")
+        else:
+            # For memory or immediate values, move through a temporary register
+            temp_reg = "r10"  # Use r10 as a temporary register
+            if isinstance(src, int):
+                self.emit(f"mov {temp_reg}, {src}")
+            else:
+                self.emit(f"mov {temp_reg}, [{src}]")
+            self.emit(f"mov {dest}, {temp_reg}")
+
     def generate_print(self, stmt: Print):
         """Generate PRINT instruction: output integer value"""
         self.needs_print_int = True
@@ -423,3 +502,178 @@ class NasmGenerator:
         else:
             self.emit(f"mov r15, [{value}]")
 
+    def generate_function(self, stmt: Function):
+        """Generate function definition"""
+        self.emit_label(f"{stmt.name}")
+        for s in stmt.body:
+            self.generate_statement(s)
+
+    def generate_call(self, stmt: Call):
+        """Generate function call"""
+        self.emit(f"call {stmt.name}")
+
+    def generate_return(self, stmt: Return):
+        """Generate return statement"""
+        if stmt.value:
+            # For now, assume value is a register, move to rax
+            if self.is_register(stmt.value):
+                self.emit(f"mov rax, {self.get_register(stmt.value)}")
+        self.emit("ret")
+
+    def generate_if(self, stmt: If):
+        """Generate if-else-endif statement"""
+        else_label = f"else_{self.label_counter}"
+        endif_label = f"endif_{self.label_counter}"
+        self.label_counter += 1
+
+        self.generate_condition(stmt.condition, else_label)
+
+        for s in stmt.then_body:
+            self.generate_statement(s)
+
+        if stmt.else_body:
+            self.emit(f"jmp {endif_label}")
+            self.emit_label(else_label)
+            for s in stmt.else_body:
+                self.generate_statement(s)
+            self.emit_label(endif_label)
+        else:
+            self.emit_label(else_label)
+
+    def generate_condition(self, cond: Condition, false_label: str):
+        """Generate condition evaluation and jump to false_label if condition is false"""
+        # Load left into r10
+        if isinstance(cond.left, int):
+            self.emit(f"mov r10, {cond.left}")
+        elif self.is_register(cond.left):
+            self.emit(f"mov r10, {self.get_register(cond.left)}")
+        else:
+            self.emit(f"mov r10, [{cond.left}]")
+
+        # Load right into r11
+        if isinstance(cond.right, int):
+            self.emit(f"mov r11, {cond.right}")
+        elif self.is_register(cond.right):
+            self.emit(f"mov r11, {self.get_register(cond.right)}")
+        else:
+            self.emit(f"mov r11, [{cond.right}]")
+
+        # Compare
+        self.emit("cmp r10, r11")
+
+        # Jump based on op
+        if cond.op == "==":
+            self.emit(f"jne {false_label}")
+        elif cond.op == "!=":
+            self.emit(f"je {false_label}")
+        elif cond.op == ">":
+            self.emit(f"jle {false_label}")
+        elif cond.op == "<":
+            self.emit(f"jge {false_label}")
+        elif cond.op == ">=":
+            self.emit(f"jl {false_label}")
+        elif cond.op == "<=":
+            self.emit(f"jg {false_label}")
+
+    def generate_loop(self, stmt: Loop):
+        """Generate LOOP var, limit / ENDLOOP - loop while var < limit"""
+        start_label = f"loop_start_{self.label_counter}"
+        end_label = f"loop_end_{self.label_counter}"
+        self.label_counter += 1
+
+
+        self.emit_label(start_label)
+
+        # Compare var < limit
+        self.emit(f"mov r10, [{stmt.var}]")
+        self.emit(f"mov r11, {stmt.limit}")
+        self.emit("cmp r10, r11")
+        self.emit(f"jge {end_label}")
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Increment var
+        self.emit(f"inc qword [{stmt.var}]")
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_while(self, stmt: While):
+        """Generate WHILE condition / ENDWHILE - loop while condition is true"""
+        start_label = f"while_start_{self.label_counter}"
+        end_label = f"while_end_{self.label_counter}"
+        self.label_counter += 1
+
+        self.emit_label(start_label)
+
+        self.generate_condition(stmt.condition, end_label)
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_for(self, stmt: For):
+        """Generate FOR var FROM start TO end [STEP step] / ENDFOR - range loop"""
+        # Declare the variable if not already declared
+        if stmt.var not in self.variables:
+            self.variables[stmt.var] = True
+            self.emit_bss(f"{stmt.var} resq 1")
+
+        start_label = f"for_start_{self.label_counter}"
+        end_label = f"for_end_{self.label_counter}"
+        self.label_counter += 1
+
+        # Initialize var to start
+        self.emit(f"mov qword [{stmt.var}], {stmt.start}")
+
+        self.emit_label(start_label)
+
+        # Compare var > end (assuming step > 0)
+        self.emit(f"mov r10, [{stmt.var}]")
+        self.emit(f"mov r11, {stmt.end}")
+        self.emit("cmp r10, r11")
+        self.emit(f"jg {end_label}")
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Increment var by step
+        if stmt.step == 1:
+            self.emit(f"inc qword [{stmt.var}]")
+        else:
+            self.emit(f"add qword [{stmt.var}], {stmt.step}")
+
+        self.emit(f"jmp {start_label}")
+
+        self.emit_label(end_label)
+
+    def generate_repeat(self, stmt: Repeat):
+        """Generate REPEAT / UNTIL condition - post-condition loop"""
+        start_label = f"repeat_start_{self.label_counter}"
+        self.label_counter += 1
+
+        self.emit_label(start_label)
+
+        # Body
+        for s in stmt.body:
+            self.generate_statement(s)
+
+        # Condition - if false, jump back
+        self.generate_condition(stmt.condition, start_label)
+
+    def generate_push(self, stmt: Push):
+        """Generate PUSH register - Push register value onto stack"""
+        reg = self.get_register(stmt.register)
+        self.emit(f"push {reg}")
+
+    def generate_pop(self, stmt: Pop):
+        """Generate POP register - Pop value from stack into register"""
+        reg = self.get_register(stmt.register)
+        self.emit(f"pop {reg}")

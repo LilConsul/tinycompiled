@@ -79,8 +79,6 @@ class Parser:
             return self._simple_handlers[token_type]()
 
         # Control flow and structured statements
-        if token_type == TokenType.LABEL:
-            return self.parse_label()
         if token_type == TokenType.IF:
             return self.parse_if()
         if token_type == TokenType.LOOP:
@@ -109,8 +107,6 @@ class Parser:
         # Register operations
         if token_type == TokenType.MOVE:
             return self.parse_move()
-        if token_type == TokenType.CMP:
-            return self.parse_compare()
         if token_type == TokenType.NOT:
             return self.parse_not()
 
@@ -133,18 +129,6 @@ class Parser:
         # Shift operations
         if token_type in [TokenType.SHL, TokenType.SHR]:
             return self.parse_shift()
-
-        # Jump operations
-        if token_type in [
-            TokenType.JMP,
-            TokenType.JE,
-            TokenType.JNE,
-            TokenType.JG,
-            TokenType.JL,
-            TokenType.JGE,
-            TokenType.JLE,
-        ]:
-            return self.parse_jump()
 
         raise SyntaxError(f"Unexpected token {token_type} at line {token.line}")
 
@@ -239,13 +223,10 @@ class Parser:
         operand = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
         return UnaryOp(op, operand)
 
-    def parse_not(self) -> BinaryOp:
+    def parse_not(self) -> UnaryOp:
         self.expect(TokenType.NOT)
-        dest = self.expect(TokenType.REGISTER).value
-        self.expect(TokenType.COMMA)
-        src = self.expect(TokenType.REGISTER).value
-        # NOT is special - it has dest and src
-        return BinaryOp("NOT", dest, src, 0)
+        operand = self.expect(TokenType.REGISTER).value
+        return UnaryOp("NOT", operand)
 
     def parse_shift(self) -> ShiftOp:
         op_token = self.current_token()
@@ -259,24 +240,6 @@ class Parser:
         count = self.expect(TokenType.NUMBER).value
 
         return ShiftOp(op, dest, src, count)
-
-    def parse_compare(self) -> Compare:
-        self.expect(TokenType.CMP)
-        left = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
-        self.expect(TokenType.COMMA)
-        right = self._parse_value([TokenType.REGISTER, TokenType.NUMBER])
-        return Compare(left, right)
-
-    def parse_jump(self) -> Jump:
-        op_token = self.current_token()
-        op = op_token.value.upper()
-        self.advance()
-        label = self.expect(TokenType.IDENTIFIER).value
-        return Jump(op, label)
-
-    def parse_label(self) -> Label:
-        label = self.expect(TokenType.LABEL).value
-        return Label(label)
 
     def parse_function(self) -> Function:
         self.expect(TokenType.FUNC)

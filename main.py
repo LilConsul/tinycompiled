@@ -60,53 +60,49 @@ class TinyCompiledApp(App):
 if __name__ == "__main__":
     # TinyCompiledApp().run()
 
-    # Example 1: Simple arithmetic
+    # Example 1: PUSH/POP and Comparison Operators Test
     example1 = """
-        ; Example 1: Testing Binary Operations (ADD, SUB, MUL, DIV, AND, OR, XOR)
-        
-        ; Test ADD operation
-        VAR a, 10
-        VAR b, 5
+; Fibonacci function in TinyCompiled
+; Computes the nth Fibonacci number iteratively
+; Assumes VAR n is set before calling
+
+FUNC fibonacci
+    ; Handle base cases
+    IF n == 0
+        LOAD R1, 0
+        RET R1
+    ENDIF
+    
+    IF n == 1
+        LOAD R1, 1
+        RET R1
+    ENDIF
+    
+    ; Initialize for iterative calculation
+    VAR a, 0
+    VAR b, 1
+    VAR i, 2
+    
+    ; Loop from 2 to n
+    WHILE i <= n
         LOAD R1, a
         LOAD R2, b
-        ADD R3, R1, R2          ; R3 = R1 + R2 = 10 + 5 = 15
-        PRINT R3
-        
-        ; Test SUB operation
-        SUB R4, R1, R2          ; R4 = R1 - R2 = 10 - 5 = 5
-        PRINT R4
-        
-        ; Test MUL operation
-        MUL R5, R1, R2          ; R5 = R1 * R2 = 10 * 5 = 50
-        PRINT R5
-        
-        ; Test DIV operation
-        DIV R6, R1, R2          ; R6 = R1 / R2 = 10 / 2 = 2
-        PRINT R6
-        
-        ; Test ADD with immediate
-        ADD R7, R1, 100         ; R7 = R1 + 100 = 10 + 100 = 110
-        PRINT R7
-        
-        ; Test SUB with immediate
-        SUB R8, R1, 3           ; R8 = R1 - 3 = 10 - 3 = 7
-        PRINT R8
-        
-        ; Test bitwise AND
-        LOAD R1, 0b1111
-        LOAD R2, 0b1010
-        AND R3, R1, R2          ; R3 = 1111 & 1010 = 1010 = 10
-        PRINT R3
-        
-        ; Test bitwise OR
-        OR R4, R1, R2           ; R4 = 1111 | 1010 = 1111 = 15
-        PRINT R4
-        
-        ; Test bitwise XOR
-        XOR R5, R1, R2          ; R5 = 1111 ^ 1010 = 0101 = 5
-        PRINT R5
-        
-        HALT
+        ADD R3, R1, R2    ; temp = a + b
+        SET a, R2         ; a = b
+        SET b, R3         ; b = temp
+        INC i
+    ENDWHILE
+    
+    ; Return the result in b
+    LOAD R1, b
+    RET R1
+ENDFUNC
+
+; Main program example
+VAR n, 10
+CALL fibonacci
+PRINT R1
+HALT
     """
 
     print("Compiling TinyCompiled to NASM...")

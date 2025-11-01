@@ -58,23 +58,6 @@ class ShiftOp(ASTNode):
 
 
 @dataclass
-class Compare(ASTNode):
-    left: Union[str, int]  # register or identifier
-    right: Union[str, int]  # register or immediate
-
-
-@dataclass
-class Jump(ASTNode):
-    op: str  # JMP, JE, JNE, JG, JL, JGE, JLE
-    label: str
-
-
-@dataclass
-class Label(ASTNode):
-    name: str
-
-
-@dataclass
 class Function(ASTNode):
     name: str
     body: List[ASTNode]
