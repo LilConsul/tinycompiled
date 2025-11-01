@@ -29,7 +29,7 @@
 - [ ] `AND register, register, register` - Bitwise AND
 - [ ] `OR register, register, register` - Bitwise OR
 - [ ] `XOR register, register, register` - Bitwise XOR
-- [ ] `NOT register, register` - Bitwise NOT
+- [ ] `NOT register` - Bitwise NOT (in-place)
 - [ ] `SHL register, register, immediate` - Shift left
 - [ ] `SHR register, register, immediate` - Shift right
 

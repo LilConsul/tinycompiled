@@ -90,7 +90,7 @@ DEC counter         ; counter--
 - [ ] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
 - [ ] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
 - [ ] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
-- [ ] `NOT register, register` - Bitwise NOT (dest = ~src)
+- [ ] `NOT register` - Bitwise NOT (register = ~register)
 - [ ] `SHL register, register, immediate` - Shift left (dest = src << count)
 - [ ] `SHR register, register, immediate` - Shift right (dest = src >> count)
 
@@ -99,7 +99,7 @@ DEC counter         ; counter--
 AND R3, R1, R2      ; R3 = R1 & R2
 OR R3, R1, R2       ; R3 = R1 | R2
 XOR R3, R1, R2      ; R3 = R1 ^ R2
-NOT R2, R1          ; R2 = ~R1
+NOT R1              ; R1 = ~R1
 SHL R2, R1, 2       ; R2 = R1 << 2
 SHR R2, R1, 3       ; R2 = R1 >> 3
 ```

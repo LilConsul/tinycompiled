@@ -239,13 +239,10 @@ class Parser:
         operand = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
         return UnaryOp(op, operand)
 
-    def parse_not(self) -> BinaryOp:
+    def parse_not(self) -> UnaryOp:
         self.expect(TokenType.NOT)
-        dest = self.expect(TokenType.REGISTER).value
-        self.expect(TokenType.COMMA)
-        src = self.expect(TokenType.REGISTER).value
-        # NOT is special - it has dest and src
-        return BinaryOp("NOT", dest, src, 0)
+        operand = self.expect(TokenType.REGISTER).value
+        return UnaryOp("NOT", operand)
 
     def parse_shift(self) -> ShiftOp:
         op_token = self.current_token()
