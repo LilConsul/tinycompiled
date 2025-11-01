@@ -62,17 +62,46 @@ if __name__ == "__main__":
 
     # Example 1: PUSH/POP and Comparison Operators Test
     example1 = """
-VAR result, 1
-VAR i, 1
+; Fibonacci function in TinyCompiled
+; Computes the nth Fibonacci number iteratively
+; Assumes VAR n is set before calling
 
-LOOP i, 7
-    LOAD R1, result
-    LOAD R2, i
-    MUL R3, R1, R2
-    SET result, R3
-ENDLOOP
+FUNC fibonacci
+    ; Handle base cases
+    IF n == 0
+        LOAD R1, 0
+        RET R1
+    ENDIF
+    
+    IF n == 1
+        LOAD R1, 1
+        RET R1
+    ENDIF
+    
+    ; Initialize for iterative calculation
+    VAR a, 0
+    VAR b, 1
+    VAR i, 2
+    
+    ; Loop from 2 to n
+    WHILE i <= n
+        LOAD R1, a
+        LOAD R2, b
+        ADD R3, R1, R2    ; temp = a + b
+        SET a, R2         ; a = b
+        SET b, R3         ; b = temp
+        INC i
+    ENDWHILE
+    
+    ; Return the result in b
+    LOAD R1, b
+    RET R1
+ENDFUNC
 
-PRINT result
+; Main program example
+VAR n, 10
+CALL fibonacci
+PRINT R1
 HALT
     """
 
