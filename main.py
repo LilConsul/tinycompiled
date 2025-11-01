@@ -62,53 +62,27 @@ if __name__ == "__main__":
 
     # Example 1: PUSH/POP and Comparison Operators Test
     example1 = """
-LOAD R1, 10
-LOAD R2, 20
-PUSH R1
-PUSH R2
-POP R3
-POP R4
-PRINT R3
-PRINT R4
-
-;Test comparison operators
-IF R1 == R2
-PRINT 0
-ELSE
-PRINT 1
-ENDIF
-
-IF R1 != R2
-PRINT 1
-ELSE
-PRINT 0
-ENDIF
-
-IF R1 > R2
-PRINT 0
-ELSE
-PRINT 1
-ENDIF
-
-IF R1 < R2
-PRINT 1
-ELSE
-PRINT 0
-ENDIF
-
-IF R1 >= R2
-PRINT 0
-ELSE
-PRINT 1
-ENDIF
-
-IF R1 <= R2
-PRINT 1
-ELSE
-PRINT 0
-ENDIF
-
-HALT
+        ; Factorial calculator with function
+        FUNC factorial
+            VAR result, 1
+            VAR i, 1
+            
+            LOOP i, 6
+                LOAD R1, result
+                LOAD R2, i
+                MUL R3, R1, R2
+                SET result, R3
+                INC i
+            ENDLOOP
+            
+            LOAD R1, result
+            RET R1
+        ENDFUNC
+        
+        ; Main program
+        CALL factorial
+        PRINT R1
+        HALT
     """
 
     print("Compiling TinyCompiled to NASM...")
