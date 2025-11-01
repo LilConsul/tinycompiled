@@ -204,11 +204,11 @@ POP R1              ; Restore R1 from stack
 
 ## 9. I/O Operations
 
-- [ ] `PRINT register` - Print register value to stdout
-- [ ] `PRINT identifier` - Print variable value to stdout
-- [ ] `PRINT immediate` - Print immediate value to stdout
-- [ ] `INPUT register` - Read integer from stdin to register
-- [ ] `INPUT identifier` - Read integer from stdin to variable
+- [x] `PRINT register` - Print register value to stdout
+- [x] `PRINT identifier` - Print variable value to stdout
+- [x] `PRINT immediate` - Print immediate value to stdout
+- [x] `INPUT register` - Read integer from stdin to register
+- [x] `INPUT identifier` - Read integer from stdin to variable
 
 **Examples:**
 
@@ -224,8 +224,8 @@ INPUT user_value    ; Read input into user_value
 
 ## 10. Special Instructions
 
-- [ ] `HALT` - Terminate program execution
-- [ ] `NOP` - No operation (do nothing)
+- [x] `HALT` - Terminate program execution
+- [x] `NOP` - No operation (do nothing)
 
 **Examples:**
 
