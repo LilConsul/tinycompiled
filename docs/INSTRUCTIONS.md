@@ -30,8 +30,8 @@
 - [x] `OR register, register, register` - Bitwise OR
 - [x] `XOR register, register, register` - Bitwise XOR
 - [x] `NOT register` - Bitwise NOT (in-place)
-- [ ] `SHL register, register, immediate` - Shift left
-- [ ] `SHR register, register, immediate` - Shift right
+- [x] `SHL register, register, immediate` - Shift left
+- [x] `SHR register, register, immediate` - Shift right
 
 ## 5. Comparison
 - [ ] `CMP register, register` - Compare two registers

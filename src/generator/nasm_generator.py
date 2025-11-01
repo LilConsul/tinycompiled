@@ -289,6 +289,8 @@ class NasmGenerator:
             self.generate_binary_op(stmt)
         elif isinstance(stmt, UnaryOp):
             self.generate_unary_op(stmt)
+        elif isinstance(stmt, ShiftOp):
+            self.generate_shift(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
@@ -304,6 +306,22 @@ class NasmGenerator:
             self.emit(f"dec {operand}")
         elif stmt.op == "NOT":
             self.emit(f"not {operand}")
+
+    def generate_shift(self, stmt: ShiftOp):
+        """Generate shift operation instruction"""
+        dest = self.get_register(stmt.dest)
+        src = self.get_register(stmt.src)
+        count = stmt.count
+
+        # Move src to dest if not the same
+        if dest != src:
+            self.emit(f"mov {dest}, {src}")
+
+        # Perform shift
+        if stmt.op == "SHL":
+            self.emit(f"shl {dest}, {count}")
+        elif stmt.op == "SHR":
+            self.emit(f"shr {dest}, {count}")
 
     def generate_binary_op(self, stmt: BinaryOp):
         """Generate binary operation instruction"""

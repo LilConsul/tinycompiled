@@ -20,8 +20,8 @@ KEYWORD_DICT = {
     "DEC": TokenType.DEC,
     "NOT": TokenType.NOT,
 
-    # "SHL": TokenType.SHL,
-    # "SHR": TokenType.SHR,
+    "SHL": TokenType.SHL,
+    "SHR": TokenType.SHR,
     # "CMP": TokenType.CMP,
     # "JMP": TokenType.JMP,
     # "JE": TokenType.JE,

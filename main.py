@@ -75,11 +75,17 @@ if __name__ == "__main__":
         
         MOVE R3, R1        ; Copy R1 to R3 (R3 = 42)
         
+        ; Test shifts
+        SHL R4, R2, 2      ; R4 = R2 << 2 (10 << 2 = 40)
+        SHR R5, R1, 1      ; R5 = R1 >> 1 (42 >> 1 = 21)
+        
         PRINT R1           ; Should print 42
         PRINT R2           ; Should print 10
         PRINT b            ; Should print 25
         PRINT c            ; Should print 42
         PRINT R3           ; Should print 42
+        PRINT R4           ; Should print 40
+        PRINT R5           ; Should print 21
         
         HALT
     """

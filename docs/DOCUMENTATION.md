@@ -91,8 +91,8 @@ DEC counter         ; counter--
 - [x] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
 - [x] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
 - [x] `NOT register` - Bitwise NOT (register = ~register)
-- [ ] `SHL register, register, immediate` - Shift left (dest = src << count)
-- [ ] `SHR register, register, immediate` - Shift right (dest = src >> count)
+- [x] `SHL register, register, immediate` - Shift left (dest = src << count)
+- [x] `SHR register, register, immediate` - Shift right (dest = src >> count)
 
 **Examples:**
 ```tc
