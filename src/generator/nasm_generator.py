@@ -227,7 +227,7 @@ class NasmGenerator:
         self.text_section.append("")
         self.emit_label("read_int")
 
-        # Read from stdin using syscall (clobbers rax, rdi, rsi, rdx but we don't care)
+        # Read from stdin using syscall (clobbers rax, rdi, ssi, rdx but we don't care)
         self.emit(f"mov rax, {self.SYS_READ}")
         self.emit(f"mov rdi, {self.STDIN}")
         self.emit("lea rsi, [input_buffer]")
@@ -324,7 +324,10 @@ class NasmGenerator:
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
-        operand = self.get_register(stmt.operand)
+        if self.is_register(stmt.operand):
+            operand = self.get_register(stmt.operand)
+        else:
+            operand = f"qword [{stmt.operand}]"
 
         if stmt.op == "INC":
             self.emit(f"inc {operand}")
@@ -578,8 +581,6 @@ class NasmGenerator:
         end_label = f"loop_end_{self.label_counter}"
         self.label_counter += 1
 
-        # Initialize var to 0
-        self.emit(f"mov qword [{stmt.var}], 0")
 
         self.emit_label(start_label)
 
