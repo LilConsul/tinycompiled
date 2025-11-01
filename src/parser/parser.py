@@ -109,8 +109,6 @@ class Parser:
         # Register operations
         if token_type == TokenType.MOVE:
             return self.parse_move()
-        if token_type == TokenType.CMP:
-            return self.parse_compare()
         if token_type == TokenType.NOT:
             return self.parse_not()
 
@@ -133,18 +131,6 @@ class Parser:
         # Shift operations
         if token_type in [TokenType.SHL, TokenType.SHR]:
             return self.parse_shift()
-
-        # Jump operations
-        if token_type in [
-            TokenType.JMP,
-            TokenType.JE,
-            TokenType.JNE,
-            TokenType.JG,
-            TokenType.JL,
-            TokenType.JGE,
-            TokenType.JLE,
-        ]:
-            return self.parse_jump()
 
         raise SyntaxError(f"Unexpected token {token_type} at line {token.line}")
 
@@ -257,19 +243,6 @@ class Parser:
 
         return ShiftOp(op, dest, src, count)
 
-    def parse_compare(self) -> Compare:
-        self.expect(TokenType.CMP)
-        left = self._parse_value([TokenType.REGISTER, TokenType.IDENTIFIER])
-        self.expect(TokenType.COMMA)
-        right = self._parse_value([TokenType.REGISTER, TokenType.NUMBER])
-        return Compare(left, right)
-
-    def parse_jump(self) -> Jump:
-        op_token = self.current_token()
-        op = op_token.value.upper()
-        self.advance()
-        label = self.expect(TokenType.IDENTIFIER).value
-        return Jump(op, label)
 
     def parse_label(self) -> Label:
         label = self.expect(TokenType.LABEL).value

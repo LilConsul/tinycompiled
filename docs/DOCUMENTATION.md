@@ -3,26 +3,27 @@
 ## Terminology
 
 ### `register`
-A temporary storage location in the CPU for fast data access. TinyCompiled provides 8 registers: **R1, R2, R3, R4, R5, R6, R7, R8**
+
+A temporary storage location in the CPU for fast data access. TinyCompiled provides 8 registers: **R1, R2, R3, R4, R5,
+R6, R7, R8**
 
 Example: `R1`, `R5`, `R8`
 
 ### `identifier`
-A user-defined name for a variable or function. Must start with a letter or underscore, can contain letters, digits, and underscores.
+
+A user-defined name for a variable or function. Must start with a letter or underscore, can contain letters, digits, and
+underscores.
 
 Example: `counter`, `sum_total`, `my_var`, `_temp`
 
 ### `immediate`
+
 A constant literal value embedded directly in the instruction. Can be decimal, hexadecimal, or binary.
 
 Example: `42`, `-10`, `0xFF`, `0b1010`
 
-### `label`
-A named position in code used as a jump target. Defined with a colon.
-
-Example: `loop_start:`, `end:`
-
 ### `condition`
+
 A comparison expression used in control flow statements.
 
 Example: `R1 > 10`, `counter == 0`, `x >= 5`
@@ -30,10 +31,12 @@ Example: `R1 > 10`, `counter == 0`, `x >= 5`
 ---
 
 ## 1. Variable Declaration
+
 - [x] `VAR identifier` - Declare variable (default 0)
 - [x] `VAR identifier, immediate` - Declare and initialize variable
 
 **Examples:**
+
 ```tc
 VAR counter          ; counter = 0
 VAR sum, 100        ; sum = 100
@@ -42,6 +45,7 @@ VAR sum, 100        ; sum = 100
 ---
 
 ## 2. Data Movement
+
 - [x] `LOAD register, immediate` - Load immediate value into register
 - [x] `LOAD register, identifier` - Load variable into register
 - [x] `SET identifier, immediate` - Store immediate to variable
@@ -49,6 +53,7 @@ VAR sum, 100        ; sum = 100
 - [x] `MOVE register, register` - Copy between registers
 
 **Examples:**
+
 ```tc
 LOAD R1, 42         ; R1 = 42
 LOAD R2, counter    ; R2 = counter
@@ -60,6 +65,7 @@ MOVE R2, R1         ; R2 = R1
 ---
 
 ## 3. Arithmetic Operations
+
 - [x] `ADD register, register, register` - Addition (dest = src1 + src2)
 - [x] `ADD register, register, immediate` - Addition (dest = src + immediate)
 - [x] `SUB register, register, register` - Subtraction (dest = src1 - src2)
@@ -74,6 +80,7 @@ MOVE R2, R1         ; R2 = R1
 - [x] `DEC identifier` - Decrement variable by 1
 
 **Examples:**
+
 ```tc
 ADD R3, R1, R2      ; R3 = R1 + R2
 ADD R1, R1, 5       ; R1 = R1 + 5
@@ -87,6 +94,7 @@ DEC counter         ; counter--
 ---
 
 ## 4. Logical/Bitwise Operations
+
 - [x] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
 - [x] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
 - [x] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
@@ -95,6 +103,7 @@ DEC counter         ; counter--
 - [x] `SHR register, register, immediate` - Shift right (dest = src >> count)
 
 **Examples:**
+
 ```tc
 AND R3, R1, R2      ; R3 = R1 & R2
 OR R3, R1, R2       ; R3 = R1 | R2
@@ -106,46 +115,15 @@ SHR R2, R1, 3       ; R2 = R1 >> 3
 
 ---
 
-## 5. Comparison
-- [x] `CMP register, register` - Compare two registers
-- [x] `CMP register, immediate` - Compare register with immediate
-- [x] `CMP identifier, immediate` - Compare variable with immediate
+## 5. Functions
 
-**Examples:**
-```tc
-CMP R1, R2          ; Compare R1 and R2
-CMP R1, 10          ; Compare R1 with 10
-CMP counter, 0      ; Compare counter with 0
-```
-
----
-
-## 6. Control Flow - Jumps
-- [ ] `JMP label` - Unconditional jump to label
-- [ ] `JE label` - Jump if equal (after CMP)
-- [ ] `JNE label` - Jump if not equal
-- [ ] `JG label` - Jump if greater
-- [ ] `JL label` - Jump if less
-- [ ] `JGE label` - Jump if greater or equal
-- [ ] `JLE label` - Jump if less or equal
-
-**Examples:**
-```tc
-loop_start:
-    INC R1
-    CMP R1, 10
-    JL loop_start   ; Jump if R1 < 10
-```
-
----
-
-## 7. Functions
 - [ ] `FUNC identifier` / `ENDFUNC` - Function definition
 - [ ] `CALL identifier` - Call function by name
 - [ ] `RET` - Return from function
 - [ ] `RET register` - Return with value in register
 
 **Examples:**
+
 ```tc
 FUNC add_numbers
     ADD R1, R1, R2
@@ -157,7 +135,8 @@ CALL add_numbers
 
 ---
 
-## 8. Loop Constructs
+## 6. Loop Constructs
+
 - [ ] `LOOP identifier, immediate` / `ENDLOOP` - Loop while var < limit
 - [ ] `WHILE condition` / `ENDWHILE` - Loop while condition is true
 - [ ] `FOR identifier FROM immediate TO immediate` / `ENDFOR` - Range loop
@@ -165,6 +144,7 @@ CALL add_numbers
 - [ ] `REPEAT` / `UNTIL condition` - Post-condition loop
 
 **Examples:**
+
 ```tc
 LOOP i, 10          ; Loop while i < 10
     PRINT i
@@ -186,11 +166,13 @@ UNTIL x >= 5        ; Until x >= 5
 
 ---
 
-## 9. Conditional Statements
+## 7. Conditional Statements
+
 - [ ] `IF condition` / `ENDIF` - Execute if condition is true
 - [ ] `IF condition` / `ELSE` / `ENDIF` - Execute different blocks based on condition
 
 **Examples:**
+
 ```tc
 IF R1 > 10
     LOAD R2, 1
@@ -205,11 +187,13 @@ ENDIF
 
 ---
 
-## 10. Stack Operations
+## 8. Stack Operations
+
 - [ ] `PUSH register` - Push register value onto stack
 - [ ] `POP register` - Pop value from stack into register
 
 **Examples:**
+
 ```tc
 PUSH R1             ; Save R1 to stack
 CALL my_function
@@ -218,7 +202,8 @@ POP R1              ; Restore R1 from stack
 
 ---
 
-## 11. I/O Operations
+## 9. I/O Operations
+
 - [ ] `PRINT register` - Print register value to stdout
 - [ ] `PRINT identifier` - Print variable value to stdout
 - [ ] `PRINT immediate` - Print immediate value to stdout
@@ -226,6 +211,7 @@ POP R1              ; Restore R1 from stack
 - [ ] `INPUT identifier` - Read integer from stdin to variable
 
 **Examples:**
+
 ```tc
 PRINT R1            ; Print R1
 PRINT counter       ; Print counter variable
@@ -236,11 +222,13 @@ INPUT user_value    ; Read input into user_value
 
 ---
 
-## 12. Special Instructions
+## 10. Special Instructions
+
 - [ ] `HALT` - Terminate program execution
 - [ ] `NOP` - No operation (do nothing)
 
 **Examples:**
+
 ```tc
 HALT                ; Exit program
 NOP                 ; Placeholder
@@ -248,7 +236,8 @@ NOP                 ; Placeholder
 
 ---
 
-## 13. Language Features
+## 11. Language Features
+
 - [ ] **Registers:** R1, R2, R3, R4, R5, R6, R7, R8
 - [ ] **Labels:** `label_name:` syntax (for jumps only)
 - [ ] **Functions:** Named, reusable code blocks
@@ -259,6 +248,7 @@ NOP                 ; Placeholder
 ---
 
 ## Comparison Operators (for loops/conditionals)
+
 - [ ] `==` - Equal to
 - [ ] `!=` - Not equal to
 - [ ] `>` - Greater than

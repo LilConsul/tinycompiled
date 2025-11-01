@@ -291,38 +291,11 @@ class NasmGenerator:
             self.generate_unary_op(stmt)
         elif isinstance(stmt, ShiftOp):
             self.generate_shift(stmt)
-        elif isinstance(stmt, Compare):
-            self.generate_compare(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
 
-    def generate_compare(self, stmt: Compare):
-        """Generate comparison instruction"""
-        left_operand = (
-            str(stmt.left)
-            if isinstance(stmt.left, int)
-            else f"[{stmt.left}]"
-            if not self.is_register(stmt.left)
-            else self.get_register(stmt.left)
-        )
-
-        right_operand = (
-            str(stmt.right)
-            if isinstance(stmt.right, int)
-            else f"[{stmt.right}]"
-            if not self.is_register(stmt.right)
-            else self.get_register(stmt.right)
-        )
-
-        # Add size specifier for memory operands
-        if left_operand.startswith("["):
-            left_operand = f"qword {left_operand}"
-        if right_operand.startswith("["):
-            right_operand = f"qword {right_operand}"
-
-        self.emit(f"cmp {left_operand}, {right_operand}")
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
