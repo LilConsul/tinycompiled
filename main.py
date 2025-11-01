@@ -119,5 +119,5 @@ if __name__ == "__main__":
     print(
         "nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test"
     )
-    with open("./test_output/test_.asm", "w") as f:
+    with open("./test_output/test_.asm", "x") as f:
         f.write(asm_output)
