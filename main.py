@@ -1,16 +1,46 @@
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal
-from textual.widgets import TextArea, Static
+from textual.containers import Horizontal, Container
+from textual.widgets import Static, TextArea
 from textual.reactive import var
 
 from src import compile_tc_to_nasm
 
 
 def translate_tc_to_nasm(tc_code: str) -> str:
-    return tc_code
+    """Translate TinyCompiled code to NASM assembly."""
+    if not tc_code or not tc_code.strip():
+        return "NASM translation will appear here."
+
+    try:
+        nasm_output = compile_tc_to_nasm(tc_code)
+        return nasm_output
+    except Exception as e:
+        return f"Error during compilation:\n{str(e)}"
 
 
 class TinyCompiledApp(App):
+    """TinyCompiled IDE with live syntax highlighting preview."""
+
+    CSS = """
+    #editor-container {
+        width: 1fr;
+        height: 100%;
+    }
+    
+    #output-container {
+        width: 1fr;
+        height: 100%;
+    }
+    
+    .panel-title {
+        height: 1;
+        background: #1d0b3e;
+        color: #d4b5ff;
+        padding: 0 2;
+        text-align: center;
+    }
+    """
+
     tc_code = var("")
 
     def compose(self) -> ComposeResult:
@@ -21,28 +51,29 @@ class TinyCompiledApp(App):
             soft_wrap=False,
             tab_behavior="indent",
         )
+
         self.output = Static("NASM translation will appear here.", expand=True)
-        yield Horizontal(self.editor, self.output)
+
+        with Horizontal():
+            with Container(id="editor-container"):
+                yield Static("TinyCompiled Editor", classes="panel-title")
+                yield self.editor
+            with Container(id="output-container"):
+                yield Static("NASM Output", classes="panel-title")
+                yield self.output
 
     def on_mount(self) -> None:
         # Soft lavender background
         self.screen.styles.background = "#2d1b4e"
 
-        # Container styling
-        horizontal = self.query_one(Horizontal)
-        horizontal.styles.height = "100%"
-        horizontal.styles.background = "#2d1b4e"
-
-        # Editor - soft purple with rounded border
-        self.editor.styles.width = "1fr"
-        self.editor.styles.height = "100%"
+        # Editor styling
+        self.editor.styles.height = "1fr"
         self.editor.styles.border = ("round", "#b794f6")
         self.editor.styles.background = "#3d2b5f"
         self.editor.styles.padding = (1, 2)
 
-        # Output - lighter soft purple with accent border
-        self.output.styles.width = "1fr"
-        self.output.styles.height = "100%"
+        # Output styling
+        self.output.styles.height = "1fr"
         self.output.styles.border = ("round", "#d4b5ff")
         self.output.styles.background = "#4a3470"
         self.output.styles.color = "#f0e6ff"
@@ -51,73 +82,14 @@ class TinyCompiledApp(App):
 
         self.editor.focus()
 
-    def on_text_area_changed(self, event: TextArea.Changed) -> None:
+    def on_text_area_changed(self, event) -> None:
+        """Handle text changes - update NASM output."""
         self.tc_code = event.text_area.text
-        nasm_code = translate_tc_to_nasm(self.tc_code)
-        self.output.update(nasm_code)
+
+        # # Update NASM output
+        # nasm_code = translate_tc_to_nasm(self.tc_code)
+        # self.output.update(nasm_code)
 
 
 if __name__ == "__main__":
-    # TinyCompiledApp().run()
-
-    # Example 1: Simple arithmetic
-    example1 = """
-        ; Example 1: Testing Binary Operations (ADD, SUB, MUL, DIV, AND, OR, XOR)
-        
-        ; Test ADD operation
-        VAR a, 10
-        VAR b, 5
-        LOAD R1, a
-        LOAD R2, b
-        ADD R3, R1, R2          ; R3 = R1 + R2 = 10 + 5 = 15
-        PRINT R3
-        
-        ; Test SUB operation
-        SUB R4, R1, R2          ; R4 = R1 - R2 = 10 - 5 = 5
-        PRINT R4
-        
-        ; Test MUL operation
-        MUL R5, R1, R2          ; R5 = R1 * R2 = 10 * 5 = 50
-        PRINT R5
-        
-        ; Test DIV operation
-        DIV R6, R1, R2          ; R6 = R1 / R2 = 10 / 2 = 2
-        PRINT R6
-        
-        ; Test ADD with immediate
-        ADD R7, R1, 100         ; R7 = R1 + 100 = 10 + 100 = 110
-        PRINT R7
-        
-        ; Test SUB with immediate
-        SUB R8, R1, 3           ; R8 = R1 - 3 = 10 - 3 = 7
-        PRINT R8
-        
-        ; Test bitwise AND
-        LOAD R1, 0b1111
-        LOAD R2, 0b1010
-        AND R3, R1, R2          ; R3 = 1111 & 1010 = 1010 = 10
-        PRINT R3
-        
-        ; Test bitwise OR
-        OR R4, R1, R2           ; R4 = 1111 | 1010 = 1111 = 15
-        PRINT R4
-        
-        ; Test bitwise XOR
-        XOR R5, R1, R2          ; R5 = 1111 ^ 1010 = 0101 = 5
-        PRINT R5
-        
-        HALT
-    """
-
-    print("Compiling TinyCompiled to NASM...")
-    print("=" * 60)
-    asm_output = compile_tc_to_nasm(example1)
-    print(asm_output)
-    print("=" * 60)
-    print("\nTo assemble and run:")
-    # print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
-    print(
-        "nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test"
-    )
-    with open("./test_output/test_.asm", "w") as f:
-        f.write(asm_output)
+    TinyCompiledApp().run()
