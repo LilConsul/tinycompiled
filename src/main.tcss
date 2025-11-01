@@ -1,0 +1,212 @@
+Screen {
+    background: $surface;
+    color: $text;
+}
+
+Horizontal {
+    height: 1fr;
+    background: $surface;
+}
+
+TextArea {
+    border: round $primary;
+    background: $panel;
+    color: $text;
+    padding: 0 1;
+}
+
+TextArea:focus {
+    border: heavy $accent;
+}
+
+/* Left Editor (TC Code) */
+Horizontal > TextArea:first-child {
+    width: 1fr;
+    margin: 1 1 1 1;
+}
+
+/* Right Output (NASM Code) */
+Horizontal > TextArea:last-child {
+    width: 1fr;
+    margin: 1 1 1 0;
+    border: round $secondary;
+}
+
+Horizontal > TextArea:last-child:focus {
+    border: heavy $secondary;
+}
+
+/* Footer Styling */
+Footer {
+    background: $boost;
+    color: $text;
+    dock: bottom;
+    height: 1;
+}
+
+/* Save Dialog Modal Overlay */
+SaveDialog {
+    align: center middle;
+    background: $background 40%;
+}
+
+#save-dialog {
+    background: $panel;
+    border: thick $accent;
+    width: 80;
+    height: 30;
+    padding: 1 2;
+}
+
+#dialog-title {
+    text-align: center;
+    text-style: bold;
+    color: $accent;
+    width: 100%;
+    height: auto;
+    padding: 0 0 1 0;
+    content-align: center middle;
+}
+
+#dialog-content {
+    height: auto;
+    width: 100%;
+    padding: 1 0;
+}
+
+#dir-label {
+    color: $text-muted;
+    padding: 0 0 1 0;
+}
+
+#dir-tree {
+    border: round $primary;
+    background: $panel;
+    height: 12;
+    margin: 0 0 1 0;
+    padding: 0 1;
+}
+
+#dir-tree:focus {
+    border: heavy $accent;
+}
+
+#current-dir {
+    color: $text-muted;
+    text-style: italic;
+    padding: 0 0 1 0;
+}
+
+#filename-input {
+    border: round $primary;
+    background: $panel;
+    margin: 0 0 1 0;
+    padding: 0 1;
+}
+
+#filename-input:focus {
+    border: heavy $accent;
+}
+
+#button-container {
+    height: auto;
+    width: 100%;
+    align: center middle;
+    padding: 1 0 0 0;
+}
+
+#button-container > Button {
+    margin: 0 1;
+    min-width: 14;
+}
+
+Button {
+    margin: 0 1;
+    border: round $primary;
+    background: $panel;
+    color: $text;
+}
+
+Button:hover {
+    background: $primary;
+    color: $text;
+    text-style: bold;
+}
+
+Button.-primary {
+    background: $success;
+    color: $background;
+    border: round $success-darken-2;
+}
+
+Button.-primary:hover {
+    background: $success-lighten-1;
+    text-style: bold;
+}
+
+Button.-error {
+    background: $error;
+    color: $background;
+    border: round $error-darken-2;
+}
+
+Button.-error:hover {
+    background: $error-lighten-1;
+    text-style: bold;
+}
+
+/* DirectoryTree Enhanced Styling */
+DirectoryTree {
+    scrollbar-color: $accent;
+    scrollbar-color-hover: $accent-lighten-1;
+    scrollbar-color-active: $accent-lighten-2;
+}
+
+Tree {
+    background: $panel;
+    color: $text;
+}
+
+Tree > .tree--cursor {
+    background: $accent 40%;
+    color: $text;
+    text-style: bold;
+}
+
+Tree > .tree--highlight {
+    background: $primary 30%;
+}
+
+/* Scrollbar Styling for all scrollable components */
+Scrollbar {
+    background: $panel-darken-1;
+}
+
+Scrollbar:hover {
+    background: $panel;
+}
+
+ScrollbarCorner {
+    background: $panel-darken-1;
+}
+
+/* Add subtle animations */
+Button, TextArea, Input, #dir-tree {
+    transition: border 200ms, background 200ms;
+}
+
+/* Label enhancements */
+Label {
+    color: $text;
+}
+
+/* Container styling */
+Container {
+    background: $surface;
+}
+
+
+Vertical {
+    background: transparent;
+}
+
