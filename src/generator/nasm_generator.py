@@ -307,6 +307,8 @@ class NasmGenerator:
             self.generate_call(stmt)
         elif isinstance(stmt, Return):
             self.generate_return(stmt)
+        elif isinstance(stmt, If):
+            self.generate_if(stmt)
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
@@ -502,3 +504,58 @@ class NasmGenerator:
             if self.is_register(stmt.value):
                 self.emit(f"mov rax, {self.get_register(stmt.value)}")
         self.emit("ret")
+
+    def generate_if(self, stmt: If):
+        """Generate if-else-endif statement"""
+        else_label = f"else_{self.label_counter}"
+        endif_label = f"endif_{self.label_counter}"
+        self.label_counter += 1
+
+        self.generate_condition(stmt.condition, else_label)
+
+        for s in stmt.then_body:
+            self.generate_statement(s)
+
+        if stmt.else_body:
+            self.emit(f"jmp {endif_label}")
+            self.emit_label(else_label)
+            for s in stmt.else_body:
+                self.generate_statement(s)
+            self.emit_label(endif_label)
+        else:
+            self.emit_label(else_label)
+
+    def generate_condition(self, cond: Condition, false_label: str):
+        """Generate condition evaluation and jump to false_label if condition is false"""
+        # Load left into r10
+        if isinstance(cond.left, int):
+            self.emit(f"mov r10, {cond.left}")
+        elif self.is_register(cond.left):
+            self.emit(f"mov r10, {self.get_register(cond.left)}")
+        else:
+            self.emit(f"mov r10, [{cond.left}]")
+
+        # Load right into r11
+        if isinstance(cond.right, int):
+            self.emit(f"mov r11, {cond.right}")
+        elif self.is_register(cond.right):
+            self.emit(f"mov r11, {self.get_register(cond.right)}")
+        else:
+            self.emit(f"mov r11, [{cond.right}]")
+
+        # Compare
+        self.emit("cmp r10, r11")
+
+        # Jump based on op
+        if cond.op == "EQ":
+            self.emit(f"jne {false_label}")
+        elif cond.op == "NEQ":
+            self.emit(f"je {false_label}")
+        elif cond.op == "GT":
+            self.emit(f"jle {false_label}")
+        elif cond.op == "LT":
+            self.emit(f"jge {false_label}")
+        elif cond.op == "GTE":
+            self.emit(f"jl {false_label}")
+        elif cond.op == "LTE":
+            self.emit(f"jg {false_label}")

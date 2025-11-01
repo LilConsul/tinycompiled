@@ -60,7 +60,7 @@ class TinyCompiledApp(App):
 if __name__ == "__main__":
     # TinyCompiledApp().run()
 
-    # Example 1: Comprehensive function tests
+    # Example 1: Comprehensive tests
     example1 = """
  ; Test FUNC, CALL, RET - Simple function
 FUNC myfunc
@@ -122,6 +122,25 @@ ENDFUNC
 
 CALL func_b
 PRINT R2
+
+ ; Test IF ELSE ENDIF
+LOAD R1, 10
+IF R1 == 10
+LOAD R2, 20
+PRINT R2
+ELSE
+LOAD R2, 30
+PRINT R2
+ENDIF
+
+LOAD R1, 5
+IF R1 != 10
+LOAD R2, 40
+PRINT R2
+ELSE
+LOAD R2, 50
+PRINT R2
+ENDIF
 
 HALT
     """
