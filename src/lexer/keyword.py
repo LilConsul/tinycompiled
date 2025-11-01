@@ -4,7 +4,7 @@ KEYWORD_DICT = {
     "VAR": TokenType.VAR,
     "LOAD": TokenType.LOAD,
     "SET": TokenType.SET,
-    # "MOVE": TokenType.MOVE,
+    "MOVE": TokenType.MOVE,
 
     # BinaryOperations
     "ADD": TokenType.ADD,

@@ -279,6 +279,8 @@ class NasmGenerator:
             self.generate_load(stmt)
         elif isinstance(stmt, Set):
             self.generate_set(stmt)
+        elif isinstance(stmt, Move):
+            self.generate_move(stmt)
         elif isinstance(stmt, Print):
             self.generate_print(stmt)
         elif isinstance(stmt, Input):
@@ -401,6 +403,23 @@ class NasmGenerator:
         else:
             self.emit(f"mov qword [{stmt.dest}], {self.get_register(stmt.src)}")
 
+    def generate_move(self, stmt: Move):
+        """Generate MOVE instruction: move value between registers or memory"""
+        dest = self.get_register(stmt.dest)
+        src = stmt.src
+
+        # If src is a register, just move it directly
+        if self.is_register(src):
+            self.emit(f"mov {dest}, {self.get_register(src)}")
+        else:
+            # For memory or immediate values, move through a temporary register
+            temp_reg = "r10"  # Use r10 as a temporary register
+            if isinstance(src, int):
+                self.emit(f"mov {temp_reg}, {src}")
+            else:
+                self.emit(f"mov {temp_reg}, [{src}]")
+            self.emit(f"mov {dest}, {temp_reg}")
+
     def generate_print(self, stmt: Print):
         """Generate PRINT instruction: output integer value"""
         self.needs_print_int = True
@@ -435,4 +454,3 @@ class NasmGenerator:
             self.emit(f"mov r15, {self.get_register(value)}")
         else:
             self.emit(f"mov r15, [{value}]")
-

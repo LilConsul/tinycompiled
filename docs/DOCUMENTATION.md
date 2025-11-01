@@ -30,8 +30,8 @@ Example: `R1 > 10`, `counter == 0`, `x >= 5`
 ---
 
 ## 1. Variable Declaration
-- [ ] `VAR identifier` - Declare variable (default 0)
-- [ ] `VAR identifier, immediate` - Declare and initialize variable
+- [x] `VAR identifier` - Declare variable (default 0)
+- [x] `VAR identifier, immediate` - Declare and initialize variable
 
 **Examples:**
 ```tc
@@ -42,11 +42,11 @@ VAR sum, 100        ; sum = 100
 ---
 
 ## 2. Data Movement
-- [ ] `LOAD register, immediate` - Load immediate value into register
-- [ ] `LOAD register, identifier` - Load variable into register
-- [ ] `SET identifier, immediate` - Store immediate to variable
-- [ ] `SET identifier, register` - Store register to variable
-- [ ] `MOVE register, register` - Copy between registers
+- [x] `LOAD register, immediate` - Load immediate value into register
+- [x] `LOAD register, identifier` - Load variable into register
+- [x] `SET identifier, immediate` - Store immediate to variable
+- [x] `SET identifier, register` - Store register to variable
+- [x] `MOVE register, register` - Copy between registers
 
 **Examples:**
 ```tc
