@@ -60,14 +60,70 @@ class TinyCompiledApp(App):
 if __name__ == "__main__":
     # TinyCompiledApp().run()
 
-    # Example 1: Simple arithmetic
+    # Example 1: Comprehensive function tests
     example1 = """
- ; Test INPUT, NOP, and HALT
-VAR user_input
-INPUT user_input    ; Read integer from stdin into user_input
-NOP                 ; No operation (placeholder)
-PRINT user_input    ; Print the input value
-HALT                ; Terminate program
+ ; Test FUNC, CALL, RET - Simple function
+FUNC myfunc
+LOAD R1, 42
+RET
+ENDFUNC
+
+CALL myfunc
+PRINT R1
+
+ ; Test RET with register
+FUNC add_one
+LOAD R1, 5
+ADD R1, R1, 1
+RET R1
+ENDFUNC
+
+CALL add_one
+PRINT R1
+
+ ; Test function calling another
+FUNC inner
+LOAD R2, 10
+RET R2
+ENDFUNC
+
+FUNC outer
+CALL inner
+ADD R1, R2, 5
+RET R1
+ENDFUNC
+
+CALL outer
+PRINT R1
+
+ ; Test with variables
+VAR x
+FUNC set_x
+LOAD R1, 100
+SET x, R1
+RET
+ENDFUNC
+
+CALL set_x
+LOAD R1, x
+PRINT R1
+
+ ; Test nested calls
+FUNC func_a
+LOAD R1, 1
+RET R1
+ENDFUNC
+
+FUNC func_b
+CALL func_a
+ADD R2, R1, 2
+RET R2
+ENDFUNC
+
+CALL func_b
+PRINT R2
+
+HALT
     """
 
     print("Compiling TinyCompiled to NASM...")

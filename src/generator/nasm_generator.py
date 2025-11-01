@@ -37,6 +37,7 @@ class NasmGenerator:
         self.variables = {}
         self.needs_print_int = False
         self.needs_read_int = False
+        self.functions = []
 
     def get_register(self, reg: str) -> str:
         """Convert virtual register name to actual x86-64 register"""
@@ -80,11 +81,15 @@ class NasmGenerator:
         )
         self.text_section.append("")
         self.emit_label("_start")
+        self.emit("jmp main_code")
 
     def _generate_program_body(self, ast: Program):
         """Generate code for all statements in the program"""
+        self.emit_label("main_code")
         for stmt in ast.statements:
             self.generate_statement(stmt)
+        for func in self.functions:
+            self.generate_function(func)
 
     def _finalize_program(self):
         """Add I/O buffers, exit code, and helper functions"""
@@ -273,7 +278,10 @@ class NasmGenerator:
         self.emit("ret")
 
     def generate_statement(self, stmt: ASTNode):
-        if isinstance(stmt, VarDecl):
+        if isinstance(stmt, Function):
+            self.functions.append(stmt)
+            return
+        elif isinstance(stmt, VarDecl):
             self.generate_var_decl(stmt)
         elif isinstance(stmt, Load):
             self.generate_load(stmt)
@@ -295,7 +303,10 @@ class NasmGenerator:
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
-
+        elif isinstance(stmt, Call):
+            self.generate_call(stmt)
+        elif isinstance(stmt, Return):
+            self.generate_return(stmt)
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
@@ -473,3 +484,21 @@ class NasmGenerator:
             self.emit(f"mov r15, {self.get_register(value)}")
         else:
             self.emit(f"mov r15, [{value}]")
+
+    def generate_function(self, stmt: Function):
+        """Generate function definition"""
+        self.emit_label(f"{stmt.name}")
+        for s in stmt.body:
+            self.generate_statement(s)
+
+    def generate_call(self, stmt: Call):
+        """Generate function call"""
+        self.emit(f"call {stmt.name}")
+
+    def generate_return(self, stmt: Return):
+        """Generate return statement"""
+        if stmt.value:
+            # For now, assume value is a register, move to rax
+            if self.is_register(stmt.value):
+                self.emit(f"mov rax, {self.get_register(stmt.value)}")
+        self.emit("ret")
