@@ -249,12 +249,12 @@ NOP                 ; Placeholder
 
 ## Comparison Operators (for loops/conditionals)
 
-- [ ] `==` - Equal to
-- [ ] `!=` - Not equal to
-- [ ] `>` - Greater than
-- [ ] `<` - Less than
-- [ ] `>=` - Greater than or equal to
-- [ ] `<=` - Less than or equal to
+- [x] `==` - Equal to
+- [x] `!=` - Not equal to
+- [x] `>` - Greater than
+- [x] `<` - Less than
+- [x] `>=` - Greater than or equal to
+- [x] `<=` - Less than or equal to
 
 ---
 
