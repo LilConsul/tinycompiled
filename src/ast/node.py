@@ -58,11 +58,6 @@ class ShiftOp(ASTNode):
 
 
 @dataclass
-class Label(ASTNode):
-    name: str
-
-
-@dataclass
 class Function(ASTNode):
     name: str
     body: List[ASTNode]

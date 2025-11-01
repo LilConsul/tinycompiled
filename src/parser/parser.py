@@ -79,8 +79,6 @@ class Parser:
             return self._simple_handlers[token_type]()
 
         # Control flow and structured statements
-        if token_type == TokenType.LABEL:
-            return self.parse_label()
         if token_type == TokenType.IF:
             return self.parse_if()
         if token_type == TokenType.LOOP:
@@ -242,11 +240,6 @@ class Parser:
         count = self.expect(TokenType.NUMBER).value
 
         return ShiftOp(op, dest, src, count)
-
-
-    def parse_label(self) -> Label:
-        label = self.expect(TokenType.LABEL).value
-        return Label(label)
 
     def parse_function(self) -> Function:
         self.expect(TokenType.FUNC)

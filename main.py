@@ -62,32 +62,12 @@ if __name__ == "__main__":
 
     # Example 1: Simple arithmetic
     example1 = """
-        ; Test Data Movement: LOAD, SET, and MOVE
-        VAR a, 10          ; Declare and initialize a = 10
-        VAR b              ; Declare b (default 0)
-        VAR c              ; Declare c
-        
-        LOAD R1, 42        ; Load immediate 42 into R1
-        LOAD R2, a         ; Load variable a into R2 (R2 = 10)
-        
-        SET b, 25          ; Set variable b to immediate 25
-        SET c, R1          ; Set variable c to register R1 (c = 42)
-        
-        MOVE R3, R1        ; Copy R1 to R3 (R3 = 42)
-        
-        ; Test shifts
-        SHL R4, R2, 2      ; R4 = R2 << 2 (10 << 2 = 40)
-        SHR R5, R1, 1      ; R5 = R1 >> 1 (42 >> 1 = 21)
-        
-        PRINT R1           ; Should print 42
-        PRINT R2           ; Should print 10
-        PRINT b            ; Should print 25
-        PRINT c            ; Should print 42
-        PRINT R3           ; Should print 42
-        PRINT R4           ; Should print 40
-        PRINT R5           ; Should print 21
-        
-        HALT
+ ; Test INPUT, NOP, and HALT
+VAR user_input
+INPUT user_input    ; Read integer from stdin into user_input
+NOP                 ; No operation (placeholder)
+PRINT user_input    ; Print the input value
+HALT                ; Terminate program
     """
 
     print("Compiling TinyCompiled to NASM...")
