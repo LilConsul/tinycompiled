@@ -317,6 +317,10 @@ class NasmGenerator:
             self.generate_for(stmt)
         elif isinstance(stmt, Repeat):
             self.generate_repeat(stmt)
+        elif isinstance(stmt, Push):
+            self.generate_push(stmt)
+        elif isinstance(stmt, Pop):
+            self.generate_pop(stmt)
 
     def generate_unary_op(self, stmt: UnaryOp):
         """Generate unary operation instruction"""
@@ -663,3 +667,12 @@ class NasmGenerator:
         # Condition - if false, jump back
         self.generate_condition(stmt.condition, start_label)
 
+    def generate_push(self, stmt: Push):
+        """Generate PUSH register - Push register value onto stack"""
+        reg = self.get_register(stmt.register)
+        self.emit(f"push {reg}")
+
+    def generate_pop(self, stmt: Pop):
+        """Generate POP register - Pop value from stack into register"""
+        reg = self.get_register(stmt.register)
+        self.emit(f"pop {reg}")
