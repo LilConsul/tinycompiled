@@ -30,8 +30,8 @@ Example: `R1 > 10`, `counter == 0`, `x >= 5`
 ---
 
 ## 1. Variable Declaration
-- [ ] `VAR identifier` - Declare variable (default 0)
-- [ ] `VAR identifier, immediate` - Declare and initialize variable
+- [x] `VAR identifier` - Declare variable (default 0)
+- [x] `VAR identifier, immediate` - Declare and initialize variable
 
 **Examples:**
 ```tc
@@ -42,11 +42,11 @@ VAR sum, 100        ; sum = 100
 ---
 
 ## 2. Data Movement
-- [ ] `LOAD register, immediate` - Load immediate value into register
-- [ ] `LOAD register, identifier` - Load variable into register
-- [ ] `SET identifier, immediate` - Store immediate to variable
-- [ ] `SET identifier, register` - Store register to variable
-- [ ] `MOVE register, register` - Copy between registers
+- [x] `LOAD register, immediate` - Load immediate value into register
+- [x] `LOAD register, identifier` - Load variable into register
+- [x] `SET identifier, immediate` - Store immediate to variable
+- [x] `SET identifier, register` - Store register to variable
+- [x] `MOVE register, register` - Copy between registers
 
 **Examples:**
 ```tc
@@ -60,14 +60,14 @@ MOVE R2, R1         ; R2 = R1
 ---
 
 ## 3. Arithmetic Operations
-- [ ] `ADD register, register, register` - Addition (dest = src1 + src2)
-- [ ] `ADD register, register, immediate` - Addition (dest = src + immediate)
-- [ ] `SUB register, register, register` - Subtraction (dest = src1 - src2)
-- [ ] `SUB register, register, immediate` - Subtraction (dest = src - immediate)
-- [ ] `MUL register, register, register` - Multiplication (dest = src1 * src2)
-- [ ] `MUL register, register, immediate` - Multiplication (dest = src * immediate)
-- [ ] `DIV register, register, register` - Division (dest = src1 / src2)
-- [ ] `DIV register, register, immediate` - Division (dest = src / immediate)
+- [x] `ADD register, register, register` - Addition (dest = src1 + src2)
+- [x] `ADD register, register, immediate` - Addition (dest = src + immediate)
+- [x] `SUB register, register, register` - Subtraction (dest = src1 - src2)
+- [x] `SUB register, register, immediate` - Subtraction (dest = src - immediate)
+- [x] `MUL register, register, register` - Multiplication (dest = src1 * src2)
+- [x] `MUL register, register, immediate` - Multiplication (dest = src * immediate)
+- [x] `DIV register, register, register` - Division (dest = src1 / src2)
+- [x] `DIV register, register, immediate` - Division (dest = src / immediate)
 - [ ] `INC register` - Increment register by 1
 - [ ] `INC identifier` - Increment variable by 1
 - [ ] `DEC register` - Decrement register by 1
@@ -87,9 +87,9 @@ DEC counter         ; counter--
 ---
 
 ## 4. Logical/Bitwise Operations
-- [ ] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
-- [ ] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
-- [ ] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
+- [x] `AND register, register, register` - Bitwise AND (dest = src1 & src2)
+- [x] `OR register, register, register` - Bitwise OR (dest = src1 | src2)
+- [x] `XOR register, register, register` - Bitwise XOR (dest = src1 ^ src2)
 - [ ] `NOT register, register` - Bitwise NOT (dest = ~src)
 - [ ] `SHL register, register, immediate` - Shift left (dest = src << count)
 - [ ] `SHR register, register, immediate` - Shift right (dest = src >> count)

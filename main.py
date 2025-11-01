@@ -9,6 +9,7 @@ from src import compile_tc_to_nasm
 def translate_tc_to_nasm(tc_code: str) -> str:
     return tc_code
 
+
 class TinyCompiledApp(App):
     tc_code = var("")
 
@@ -18,7 +19,7 @@ class TinyCompiledApp(App):
             language="python",
             show_line_numbers=True,
             soft_wrap=False,
-            tab_behavior="indent"
+            tab_behavior="indent",
         )
         self.output = Static("NASM translation will appear here.", expand=True)
         yield Horizontal(self.editor, self.output)
@@ -56,38 +57,56 @@ class TinyCompiledApp(App):
         self.output.update(nasm_code)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # TinyCompiledApp().run()
 
+    # Example 1: Simple arithmetic
     example1 = """
-        LOAD R1, 1
-        LOAD R2, 2
-        LOAD R3, 3
-        LOAD R4, 4
-        LOAD R5, 5
-        LOAD R6, 6
-        LOAD R7, 7
-        LOAD R8, 8
+        ; Example 1: Testing Binary Operations (ADD, SUB, MUL, DIV, AND, OR, XOR)
         
-        ; Print all registers once
-        PRINT R1
-        PRINT R2
+        ; Test ADD operation
+        VAR a, 10
+        VAR b, 5
+        LOAD R1, a
+        LOAD R2, b
+        ADD R3, R1, R2          ; R3 = R1 + R2 = 10 + 5 = 15
         PRINT R3
+        
+        ; Test SUB operation
+        SUB R4, R1, R2          ; R4 = R1 - R2 = 10 - 5 = 5
         PRINT R4
+        
+        ; Test MUL operation
+        MUL R5, R1, R2          ; R5 = R1 * R2 = 10 * 5 = 50
         PRINT R5
+        
+        ; Test DIV operation
+        DIV R6, R1, R2          ; R6 = R1 / R2 = 10 / 2 = 2
         PRINT R6
+        
+        ; Test ADD with immediate
+        ADD R7, R1, 100         ; R7 = R1 + 100 = 10 + 100 = 110
         PRINT R7
+        
+        ; Test SUB with immediate
+        SUB R8, R1, 3           ; R8 = R1 - 3 = 10 - 3 = 7
         PRINT R8
         
-        ; Print all registers again - values should be preserved!
-        PRINT R1
-        PRINT R2
+        ; Test bitwise AND
+        LOAD R1, 0b1111
+        LOAD R2, 0b1010
+        AND R3, R1, R2          ; R3 = 1111 & 1010 = 1010 = 10
         PRINT R3
+        
+        ; Test bitwise OR
+        OR R4, R1, R2           ; R4 = 1111 | 1010 = 1111 = 15
         PRINT R4
+        
+        ; Test bitwise XOR
+        XOR R5, R1, R2          ; R5 = 1111 ^ 1010 = 0101 = 5
         PRINT R5
-        PRINT R6
-        PRINT R7
-        PRINT R8
+        
+        HALT
     """
 
     print("Compiling TinyCompiled to NASM...")
@@ -96,4 +115,9 @@ if __name__ == '__main__':
     print(asm_output)
     print("=" * 60)
     print("\nTo assemble and run:")
-    print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
+    # print("nasm -f elf64 -o test.o <YOUR_FILENAME>.asm && ld test.o -o test && ./test && rm test.o test")
+    print(
+        "nasm -f elf64 -o test.o test_.asm && ld test.o -o test && ./test && rm test.o test"
+    )
+    with open("./test_output/test_.asm", "w") as f:
+        f.write(asm_output)

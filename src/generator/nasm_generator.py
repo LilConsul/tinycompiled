@@ -128,9 +128,20 @@ class NasmGenerator:
 
     def _add_print_int_function(self):
         """Generate print_int helper: converts integer in r15 to string and prints it
-        Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers"""
+        Takes argument in r15, uses only scratch registers r10-r15 to preserve user's R1-R8 registers
+        Note: We use rax, rbx, rdx, rsi, rdi, rcx, r11 internally, so we must save them"""
         self.text_section.append("")
         self.emit_label("print_int")
+
+        # Save all registers we will use (R1-R6 mapping)
+        self.emit("push rax")  # R1
+        self.emit("push rbx")  # R2
+        self.emit("push rcx")  # R3
+        self.emit("push rdx")  # R4
+        self.emit("push rsi")  # R5
+        self.emit("push rdi")  # R6
+        self.emit("push r11")  # scratch for divisor
+        self.text_section.append("")
 
         # r15 contains the value to print (passed by caller)
         # r10 = working value, r11 = divisor (10), r12 = buffer pointer, r13 = sign flag
@@ -189,6 +200,16 @@ class NasmGenerator:
         self.emit("lea rsi, [newline]")
         self.emit("mov rdx, 1")
         self.emit("syscall")
+        self.text_section.append("")
+
+        # Restore registers in reverse order (LIFO)
+        self.emit("pop r11")
+        self.emit("pop rdi")  # R6
+        self.emit("pop rsi")  # R5
+        self.emit("pop rdx")  # R4
+        self.emit("pop rcx")  # R3
+        self.emit("pop rbx")  # R2
+        self.emit("pop rax")  # R1
         self.text_section.append("")
 
         self.emit("ret")
@@ -262,10 +283,84 @@ class NasmGenerator:
             self.generate_print(stmt)
         elif isinstance(stmt, Input):
             self.generate_input(stmt)
+        elif isinstance(stmt, BinaryOp):
+            self.generate_binary_op(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
+
+    def generate_binary_op(self, stmt: BinaryOp):
+        """Generate binary operation instruction"""
+        dest = self.get_register(stmt.dest)
+        left = self.get_register(stmt.left)
+
+        # Determine right operand
+        if isinstance(stmt.right, int):
+            right_operand = str(stmt.right)
+        elif self.is_register(stmt.right):
+            right_operand = self.get_register(stmt.right)
+        else:
+            right_operand = f"[{stmt.right}]"
+
+        # DIV is special - it uses rax/rdx implicitly
+        if stmt.op == "DIV":
+            # Always save rdx since DIV clobbers it
+            if dest != "rdx":
+                self.emit("push rdx")
+
+            # Save rax if we'll clobber it and it's not the destination
+            # This includes the case where left == rax but dest != rax
+            save_rax = (dest != "rax")
+            if save_rax:
+                self.emit("push rax")
+
+            # Move dividend to rax if not already there
+            if left != "rax":
+                self.emit(f"mov rax, {left}")
+
+            # Clear rdx for unsigned division
+            self.emit("xor rdx, rdx")
+
+            # Perform division
+            if isinstance(stmt.right, int):
+                # Immediate values need to go through a register
+                self.emit("push r10")
+                self.emit(f"mov r10, {stmt.right}")
+                self.emit("div r10")
+                self.emit("pop r10")
+            else:
+                self.emit(f"div {right_operand}")
+
+            # Move quotient to destination if not rax
+            if dest != "rax":
+                self.emit(f"mov {dest}, rax")
+
+            # Restore rax if we saved it
+            if save_rax:
+                self.emit("pop rax")
+
+            # Restore rdx
+            if dest != "rdx":
+                self.emit("pop rdx")
+        else:
+            # For other operations, load left operand into destination register
+            if dest != left:
+                self.emit(f"mov {dest}, {left}")
+
+            # Generate operation
+            if stmt.op == "ADD":
+                self.emit(f"add {dest}, {right_operand}")
+            elif stmt.op == "SUB":
+                self.emit(f"sub {dest}, {right_operand}")
+            elif stmt.op == "MUL":
+                self.emit(f"imul {dest}, {right_operand}")
+            elif stmt.op == "AND":
+                self.emit(f"and {dest}, {right_operand}")
+            elif stmt.op == "OR":
+                self.emit(f"or {dest}, {right_operand}")
+            elif stmt.op == "XOR":
+                self.emit(f"xor {dest}, {right_operand}")
 
     def generate_var_decl(self, stmt: VarDecl):
         """Generate variable declaration in data or bss section"""
@@ -291,7 +386,7 @@ class NasmGenerator:
         if isinstance(stmt.src, int):
             self.emit(f"mov qword [{stmt.dest}], {stmt.src}")
         else:
-            self.emit(f"mov [{stmt.dest}], {self.get_register(stmt.src)}")
+            self.emit(f"mov qword [{stmt.dest}], {self.get_register(stmt.src)}")
 
     def generate_print(self, stmt: Print):
         """Generate PRINT instruction: output integer value"""
