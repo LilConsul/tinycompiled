@@ -22,7 +22,8 @@ KEYWORD_DICT = {
 
     "SHL": TokenType.SHL,
     "SHR": TokenType.SHR,
-    # "CMP": TokenType.CMP,
+
+    "CMP": TokenType.CMP,
     # "JMP": TokenType.JMP,
     # "JE": TokenType.JE,
     # "JNE": TokenType.JNE,

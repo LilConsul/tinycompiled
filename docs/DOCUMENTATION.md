@@ -107,9 +107,9 @@ SHR R2, R1, 3       ; R2 = R1 >> 3
 ---
 
 ## 5. Comparison
-- [ ] `CMP register, register` - Compare two registers
-- [ ] `CMP register, immediate` - Compare register with immediate
-- [ ] `CMP identifier, immediate` - Compare variable with immediate
+- [x] `CMP register, register` - Compare two registers
+- [x] `CMP register, immediate` - Compare register with immediate
+- [x] `CMP identifier, immediate` - Compare variable with immediate
 
 **Examples:**
 ```tc

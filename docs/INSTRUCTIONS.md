@@ -34,9 +34,9 @@
 - [x] `SHR register, register, immediate` - Shift right
 
 ## 5. Comparison
-- [ ] `CMP register, register` - Compare two registers
-- [ ] `CMP register, immediate` - Compare register with immediate
-- [ ] `CMP identifier, immediate` - Compare variable with immediate
+- [x] `CMP register, register` - Compare two registers
+- [x] `CMP register, immediate` - Compare register with immediate
+- [x] `CMP identifier, immediate` - Compare variable with immediate
 
 ## 6. Control Flow - Jumps
 - [ ] `JMP label` - Unconditional jump

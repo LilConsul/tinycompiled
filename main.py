@@ -79,6 +79,11 @@ if __name__ == "__main__":
         SHL R4, R2, 2      ; R4 = R2 << 2 (10 << 2 = 40)
         SHR R5, R1, 1      ; R5 = R1 >> 1 (42 >> 1 = 21)
         
+        ; Test compare
+        CMP R1, R2         ; Compare R1 (42) and R2 (10)
+        CMP R3, 42         ; Compare R3 (42) and 42
+        CMP b, 25          ; Compare variable b and 25
+        
         PRINT R1           ; Should print 42
         PRINT R2           ; Should print 10
         PRINT b            ; Should print 25
