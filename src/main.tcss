@@ -1,3 +1,5 @@
+/* Layout - using built-in Dracula theme colors */
+
 /* Main app layout */
 Horizontal {
     height: 100%;
@@ -8,11 +10,8 @@ TextArea {
     border: solid $primary;
 }
 
-Static {
-    width: 50%;
-    border: solid $success;
-    padding: 1 2;
-    overflow-y: auto;
+TextArea:focus {
+    border: solid $accent;
 }
 
 /* Save Dialog Styling */
@@ -23,13 +22,13 @@ SaveDialog {
 #save-dialog {
     width: 90;
     height: auto;
-    background: $surface;
     border: thick $primary;
     padding: 0;
 }
 
 #dialog-title {
     width: 100%;
+    height: auto;
     content-align: center middle;
     background: $primary;
     color: $text;
@@ -53,7 +52,6 @@ SaveDialog {
 #dir-tree {
     height: 12;
     border: round $primary;
-    background: $panel;
 }
 
 #dir-tree:focus {
@@ -64,7 +62,6 @@ SaveDialog {
     padding: 1;
     color: $text-muted;
     text-style: italic;
-    background: $panel-darken-1;
     border-left: wide $accent;
     margin-top: 1;
     margin-bottom: 1;
@@ -83,7 +80,7 @@ SaveDialog {
     width: 100%;
     height: auto;
     align-horizontal: center;
-    border-top: solid $primary-darken-1;
+    border-top: solid $primary;
     padding: 2 1 2 1;
 }
 

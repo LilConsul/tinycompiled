@@ -142,6 +142,8 @@ class TinyCompiledApp(App):
         Binding("ctrl+s", "save", "Save File", show=True, priority=True),
     ]
 
+    THEME = "monokai"
+
     tc_code = var("")
     nasm_code = var("")
 
