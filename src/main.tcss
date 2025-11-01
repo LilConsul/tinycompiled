@@ -1,0 +1,87 @@
+/* Main app layout */
+Horizontal {
+    height: 100%;
+}
+
+TextArea {
+    width: 50%;
+    border: solid $primary;
+}
+
+Static {
+    width: 50%;
+    border: solid $success;
+    padding: 1 2;
+    overflow-y: auto;
+}
+
+/* Save Dialog Styling */
+SaveDialog {
+    align: center middle;
+}
+
+#save-dialog {
+    width: 80;
+    height: auto;
+    max-height: 85%;
+    background: $surface;
+    border: thick $primary;
+    padding: 0;
+}
+
+#dialog-title {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    background: $primary;
+    color: $text;
+    text-style: bold;
+    padding: 1;
+}
+
+#dialog-content {
+    padding: 1 2;
+    height: auto;
+    overflow-y: auto;
+    max-height: 25;
+}
+
+#dir-label {
+    padding: 1 0 0 0;
+    text-style: bold;
+    color: $accent;
+}
+
+#dir-tree {
+    height: 10;
+    border: solid $primary-lighten-1;
+    margin: 1 0;
+}
+
+#current-dir {
+    padding: 0 0 1 0;
+    color: $text-muted;
+    text-style: italic;
+}
+
+#filename-input {
+    margin: 1 0;
+    border: solid $primary;
+}
+
+#filename-input:focus {
+    border: solid $accent;
+}
+
+#button-container {
+    width: 100%;
+    height: auto;
+    align-horizontal: center;
+    padding: 1 2 2 2;
+}
+
+#button-container Button {
+    margin: 0 1;
+    min-width: 15;
+}
+
