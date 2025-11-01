@@ -43,6 +43,7 @@ KEYWORD_DICT = {
     "ENDIF": TokenType.ENDIF,
     "PUSH": TokenType.PUSH,
     "POP": TokenType.POP,
+    "PRINT": TokenType.PRINT,
     "INPUT": TokenType.INPUT,
     "HALT": TokenType.HALT,
     "NOP": TokenType.NOP,

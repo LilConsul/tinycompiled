@@ -60,120 +60,16 @@ class TinyCompiledApp(App):
 if __name__ == "__main__":
     # TinyCompiledApp().run()
 
-    # Example 1: Comprehensive tests
+    # Example 1: PUSH/POP and Comparison Operators Test
     example1 = """
- ; Test FUNC, CALL, RET - Simple function
-FUNC myfunc
-LOAD R1, 42
-RET
-ENDFUNC
-
-CALL myfunc
-PRINT R1
-
- ; Test RET with register
-FUNC add_one
-LOAD R1, 5
-ADD R1, R1, 1
-RET R1
-ENDFUNC
-
-CALL add_one
-PRINT R1
-
- ; Test function calling another
-FUNC inner
-LOAD R2, 10
-RET R2
-ENDFUNC
-
-FUNC outer
-CALL inner
-ADD R1, R2, 5
-RET R1
-ENDFUNC
-
-CALL outer
-PRINT R1
-
- ; Test with variables
-VAR x
-FUNC set_x
-LOAD R1, 100
-SET x, R1
-RET
-ENDFUNC
-
-CALL set_x
-LOAD R1, x
-PRINT R1
-
- ; Test nested calls
-FUNC func_a
-LOAD R1, 1
-RET R1
-ENDFUNC
-
-FUNC func_b
-CALL func_a
-ADD R2, R1, 2
-RET R2
-ENDFUNC
-
-CALL func_b
-PRINT R2
-
- ; Test IF ELSE ENDIF
 LOAD R1, 10
-IF R1 == 10
 LOAD R2, 20
-PRINT R2
-ELSE
-LOAD R2, 30
-PRINT R2
-ENDIF
-
-LOAD R1, 5
-IF R1 != 10
-LOAD R2, 40
-PRINT R2
-ELSE
-LOAD R2, 50
-PRINT R2
-ENDIF
-
- ; Test LOOP
-VAR i
-LOOP i, 3
-LOAD R1, i
-ADD R1, R1, 100
-PRINT R1
-ENDLOOP
-
- ; Test WHILE
-LOAD R1, 0
-WHILE R1 < 2
-ADD R1, R1, 1
-PRINT R1
-ENDWHILE
-
- ; Test FOR
-FOR j FROM 200 TO 202
-PRINT j
-ENDFOR
-
- ; Test FOR with STEP
-FOR k FROM 300 TO 306 STEP 2
-PRINT k
-ENDFOR
-
- ; Test REPEAT
-LOAD R1, 0
-REPEAT
-ADD R1, R1, 1
-PRINT R1
-UNTIL R1 >= 3
-
+PUSH R1
+PUSH R2
+POP R3
+POP R4
+PRINT R3
+PRINT R4
 HALT
     """
 
