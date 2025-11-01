@@ -168,8 +168,8 @@ UNTIL x >= 5        ; Until x >= 5
 
 ## 7. Conditional Statements
 
-- [ ] `IF condition` / `ENDIF` - Execute if condition is true
-- [ ] `IF condition` / `ELSE` / `ENDIF` - Execute different blocks based on condition
+- [x] `IF condition` / `ENDIF` - Execute if condition is true
+- [x] `IF condition` / `ELSE` / `ENDIF` - Execute different blocks based on condition
 
 **Examples:**
 
