@@ -75,7 +75,9 @@ class NasmGenerator:
         self.data_section.append("section .data")
         self.bss_section.append("section .bss")
         self.text_section.append("section .text")
-        self.emit("global _start", )
+        self.emit(
+            "global _start",
+        )
         self.text_section.append("")
         self.emit_label("_start")
 
@@ -270,8 +272,6 @@ class NasmGenerator:
         self.emit_label(".return")
         self.emit("ret")
 
-
-
     def generate_statement(self, stmt: ASTNode):
         if isinstance(stmt, VarDecl):
             self.generate_var_decl(stmt)
@@ -285,10 +285,23 @@ class NasmGenerator:
             self.generate_input(stmt)
         elif isinstance(stmt, BinaryOp):
             self.generate_binary_op(stmt)
+        elif isinstance(stmt, UnaryOp):
+            self.generate_unary_op(stmt)
         elif isinstance(stmt, Halt):
             self.generate_halt()
         elif isinstance(stmt, Nop):
             self.text_section.append("    nop")
+
+    def generate_unary_op(self, stmt: UnaryOp):
+        """Generate unary operation instruction"""
+        operand = self.get_register(stmt.operand)
+
+        if stmt.op == "INC":
+            self.emit(f"inc {operand}")
+        elif stmt.op == "DEC":
+            self.emit(f"dec {operand}")
+        elif stmt.op == "NOT":
+            self.emit(f"not {operand}")
 
     def generate_binary_op(self, stmt: BinaryOp):
         """Generate binary operation instruction"""
@@ -311,7 +324,7 @@ class NasmGenerator:
 
             # Save rax if we'll clobber it and it's not the destination
             # This includes the case where left == rax but dest != rax
-            save_rax = (dest != "rax")
+            save_rax = dest != "rax"
             if save_rax:
                 self.emit("push rax")
 

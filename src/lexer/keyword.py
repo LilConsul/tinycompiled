@@ -14,9 +14,12 @@ KEYWORD_DICT = {
     "AND": TokenType.AND,
     "OR": TokenType.OR,
     "XOR": TokenType.XOR,
-    # "INC": TokenType.INC,
-    # "DEC": TokenType.DEC,
-    # "NOT": TokenType.NOT,
+
+    # UnaryOperations
+    "INC": TokenType.INC,
+    "DEC": TokenType.DEC,
+    "NOT": TokenType.NOT,
+
     # "SHL": TokenType.SHL,
     # "SHR": TokenType.SHR,
     # "CMP": TokenType.CMP,
