@@ -11,6 +11,9 @@
   "WHILE"
   "ENDWHILE"
   "FOR"
+  "FROM"
+  "TO"
+  "STEP"
   "ENDFOR"
   "LOOP"
   "ENDLOOP"
@@ -26,9 +29,90 @@
   "RET"
 ] @keyword.function
 
-; Keywords - Jump/Branch
+; Keywords - Data & Variables
 [
-  "JMP"
+  "VAR"
+  "LOAD"
+  "SET"
+  "MOVE"
+] @keyword.storage
+
+; Keywords - Arithmetic Operations
+[
+  "ADD"
+  "SUB"
+  "MUL"
+  "DIV"
+  "INC"
+  "DEC"
+] @keyword.operator.arithmetic
+
+; Keywords - Logical/Bitwise Operations
+[
+  "AND"
+  "OR"
+  "XOR"
+  "NOT"
+  "SHL"
+  "SHR"
+] @keyword.operator.logical
+
+; Keywords - Stack Operations
+[
+  "PUSH"
+  "POP"
+] @keyword.control.flow
+
+; Keywords - I/O Operations
+[
+  "PRINT"
+  "INPUT"
+] @keyword.control.import
+
+; Keywords - Special Instructions
+[
+  "HALT"
+  "NOP"
+] @keyword.control.return
+
+; Comparison Operators
+[
+  "=="
+  "!="
+  ">"
+  "<"
+  ">="
+  "<="
+] @operator.comparison
+
+; Registers
+(register) @variable.builtin
+
+; Function names
+(function_definition
+  name: (identifier) @function)
+
+(function_call
+  name: (identifier) @function.call)
+
+; Labels
+(label
+  name: (identifier) @label)
+
+; Variables
+(variable_declaration
+  name: (identifier) @variable)
+
+(identifier) @variable
+
+; Literals
+(immediate) @constant.numeric
+
+; Punctuation
+[
+  ","
+  ":"
+] @punctuation.delimiter
   "JE"
   "JNE"
   "JG"
