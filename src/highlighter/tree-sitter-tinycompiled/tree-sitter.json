@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "tinycompiled",
+      "camelcase": "TinyCompiled",
+      "title": "Tiny Compiled",
+      "scope": "source.tinycompiled",
+      "file-types": [
+        ".tc"
+      ],
+      "injection-regex": "^tinycompiled$",
+      "class-name": "TreeSitterTinycompiled"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Tiny Compiled - Custom assembly-like language, designed to help new developers understand the fundamentals of assembly language",
+    "authors": [
+      {
+        "name": "Shevchenko Denys",
+        "url": "https://github.com/LilConsul/"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/LilConsul/tinycompiled"
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "node": false,
+    "python": true,
+    "rust": false,
+    "swift": false,
+    "zig": false
+  }
+}
