@@ -142,7 +142,6 @@ class TinyCompiledApp(App):
         Binding("ctrl+s", "save", "Save File", show=True, priority=True),
     ]
 
-    THEME = "monokai"
 
     tc_code = var("")
     nasm_code = var("")
@@ -165,6 +164,7 @@ class TinyCompiledApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
+        self.theme = "dracula"
         self.editor.focus()
 
     def on_text_area_changed(self, event: TextArea.Changed) -> None:

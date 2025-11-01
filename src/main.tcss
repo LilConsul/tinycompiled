@@ -1,96 +1,212 @@
-/* Layout - using built-in Dracula theme colors */
+Screen {
+    background: $surface;
+    color: $text;
+}
 
-/* Main app layout */
 Horizontal {
-    height: 100%;
+    height: 1fr;
+    background: $surface;
 }
 
 TextArea {
-    width: 50%;
-    border: solid $primary;
+    border: round $primary;
+    background: $panel;
+    color: $text;
+    padding: 0 1;
 }
 
 TextArea:focus {
-    border: solid $accent;
+    border: heavy $accent;
 }
 
-/* Save Dialog Styling */
+/* Left Editor (TC Code) */
+Horizontal > TextArea:first-child {
+    width: 1fr;
+    margin: 1 1 1 1;
+}
+
+/* Right Output (NASM Code) */
+Horizontal > TextArea:last-child {
+    width: 1fr;
+    margin: 1 1 1 0;
+    border: round $secondary;
+}
+
+Horizontal > TextArea:last-child:focus {
+    border: heavy $secondary;
+}
+
+/* Footer Styling */
+Footer {
+    background: $boost;
+    color: $text;
+    dock: bottom;
+    height: 1;
+}
+
+/* Save Dialog Modal Overlay */
 SaveDialog {
     align: center middle;
+    background: $background 40%;
 }
 
 #save-dialog {
-    width: 90;
-    height: auto;
-    border: thick $primary;
-    padding: 0;
+    background: $panel;
+    border: thick $accent;
+    width: 80;
+    height: 30;
+    padding: 1 2;
 }
 
 #dialog-title {
+    text-align: center;
+    text-style: bold;
+    color: $accent;
     width: 100%;
     height: auto;
+    padding: 0 0 1 0;
     content-align: center middle;
-    background: $primary;
-    color: $text;
-    text-style: bold;
-    padding: 1;
 }
 
 #dialog-content {
-    padding: 2;
     height: auto;
-    overflow-y: auto;
-    max-height: 28;
+    width: 100%;
+    padding: 1 0;
 }
 
 #dir-label {
-    text-style: bold;
-    color: $accent;
-    margin-bottom: 1;
+    color: $text-muted;
+    padding: 0 0 1 0;
 }
 
 #dir-tree {
-    height: 12;
     border: round $primary;
+    background: $panel;
+    height: 12;
+    margin: 0 0 1 0;
+    padding: 0 1;
 }
 
 #dir-tree:focus {
-    border: round $accent;
+    border: heavy $accent;
 }
 
 #current-dir {
-    padding: 1;
     color: $text-muted;
     text-style: italic;
-    border-left: wide $accent;
-    margin-top: 1;
-    margin-bottom: 1;
+    padding: 0 0 1 0;
 }
 
 #filename-input {
     border: round $primary;
-    height: 3;
+    background: $panel;
+    margin: 0 0 1 0;
+    padding: 0 1;
 }
 
 #filename-input:focus {
-    border: round $accent;
+    border: heavy $accent;
 }
 
 #button-container {
-    width: 100%;
     height: auto;
-    align-horizontal: center;
-    border-top: solid $primary;
-    padding: 2 1 2 1;
+    width: 100%;
+    align: center middle;
+    padding: 1 0 0 0;
 }
 
-#button-container Button {
+#button-container > Button {
     margin: 0 1;
-    min-width: 16;
-    height: 3;
+    min-width: 14;
 }
 
-#save-dialog Button {
+Button {
+    margin: 0 1;
+    border: round $primary;
+    background: $panel;
+    color: $text;
+}
+
+Button:hover {
+    background: $primary;
+    color: $text;
     text-style: bold;
+}
+
+Button.-primary {
+    background: $success;
+    color: $background;
+    border: round $success-darken-2;
+}
+
+Button.-primary:hover {
+    background: $success-lighten-1;
+    text-style: bold;
+}
+
+Button.-error {
+    background: $error;
+    color: $background;
+    border: round $error-darken-2;
+}
+
+Button.-error:hover {
+    background: $error-lighten-1;
+    text-style: bold;
+}
+
+/* DirectoryTree Enhanced Styling */
+DirectoryTree {
+    scrollbar-color: $accent;
+    scrollbar-color-hover: $accent-lighten-1;
+    scrollbar-color-active: $accent-lighten-2;
+}
+
+Tree {
+    background: $panel;
+    color: $text;
+}
+
+Tree > .tree--cursor {
+    background: $accent 40%;
+    color: $text;
+    text-style: bold;
+}
+
+Tree > .tree--highlight {
+    background: $primary 30%;
+}
+
+/* Scrollbar Styling for all scrollable components */
+Scrollbar {
+    background: $panel-darken-1;
+}
+
+Scrollbar:hover {
+    background: $panel;
+}
+
+ScrollbarCorner {
+    background: $panel-darken-1;
+}
+
+/* Add subtle animations */
+Button, TextArea, Input, #dir-tree {
+    transition: border 200ms, background 200ms;
+}
+
+/* Label enhancements */
+Label {
+    color: $text;
+}
+
+/* Container styling */
+Container {
+    background: $surface;
+}
+
+
+Vertical {
+    background: transparent;
 }
 
