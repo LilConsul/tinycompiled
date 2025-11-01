@@ -4,9 +4,10 @@ from src.parser import Parser
 from src.generator import NasmGenerator
 
 
-def compile_tc_to_nasm(source_code: str) -> str:
+def compile_tc_to_nasm(source_code: str, debug: bool | None = None) -> str:
     """Compile TinyCompiled source code to NASM assembly."""
-    debug = os.environ.get('DEBUG', '').lower() in ('true', '1', 'yes')
+    if debug is None:
+        debug = os.environ.get("DEBUG", "").lower() in ("true", "1", "yes")
 
     # Lexical analysis
     lexer = Lexer(source_code)
