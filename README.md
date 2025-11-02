@@ -210,8 +210,9 @@ uv run gui.py
 This launches the interactive Textual-based editor where you can:
 
 - Write TinyCompiled code in the left pane
-- To see real-time NASM translation in the right pane hit Ctrl+R
-- Save files with Ctrl+S (shows file save dialog)
+- Ctrl+R - See real-time NASM translation in the right pane hit
+- Ctrl+S - Save files (shows file save dialog)
+- Ctrl+Q - Quit the application
 
 #### GUI Features
 
