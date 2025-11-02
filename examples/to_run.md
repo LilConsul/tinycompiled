@@ -1,2 +1,5 @@
+To assemble and run an x86-64 assembly file named `FILENAME.asm`, use the following command in your terminal:
 
-nasm -f elf64 -o test.o hello_world.asm && ld test.o -o test && ./test && rm test.o test
+```bash
+nasm -f elf64 -o test.o FILENAME.asm && ld test.o -o test && ./test && rm test.o test
+```
