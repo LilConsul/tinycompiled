@@ -1,0 +1,31 @@
+; Demonstrate bitwise operations
+; Shows AND, OR, XOR, SHL, SHR operations
+
+VAR a, 12
+VAR b, 10
+
+; AND operation: 12 & 10 = 8
+LOAD R1, a
+LOAD R2, b
+AND R3, R1, R2
+PRINT R3
+
+; OR operation: 12 | 10 = 14
+OR R4, R1, R2
+PRINT R4
+
+; XOR operation: 12 ^ 10 = 6
+XOR R5, R1, R2
+PRINT R5
+
+; Shift left: 5 << 2 = 20
+LOAD R1, 5
+SHL R2, R1, 2
+PRINT R2
+
+; Shift right: 20 >> 2 = 5
+LOAD R1, 20
+SHR R3, R1, 2
+PRINT R3
+
+HALT

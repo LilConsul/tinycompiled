@@ -1,0 +1,27 @@
+; Find the maximum of three numbers
+; Expected output: 78
+
+VAR num1, 45
+VAR num2, 78
+VAR num3, 23
+VAR max, 0
+
+; Load first number as initial max
+LOAD R1, num1
+SET max, R1
+
+; Compare with second number
+LOAD R2, num2
+IF R2 > R1
+    SET max, R2
+    LOAD R1, R2
+ENDIF
+
+; Compare with third number
+LOAD R3, num3
+IF R3 > R1
+    SET max, R3
+ENDIF
+
+PRINT max
+HALT

@@ -1,0 +1,11 @@
+; Countdown from 10 to 0
+; Demonstrates REPEAT-UNTIL loop
+
+VAR counter, 10
+
+REPEAT
+    PRINT counter
+    DEC counter
+UNTIL counter < 0
+
+HALT

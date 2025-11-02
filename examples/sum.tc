@@ -1,0 +1,17 @@
+; Calculate sum of numbers from 1 to 100
+; Result: 5050
+
+VAR n, 100
+VAR sum, 0
+VAR i, 1
+
+WHILE i <= n
+    LOAD R1, sum
+    LOAD R2, i
+    ADD R3, R1, R2
+    SET sum, R3
+    INC i
+ENDWHILE
+
+PRINT sum
+HALT

@@ -1,0 +1,30 @@
+; Check if a number is prime
+; Tests number 17 (which is prime)
+; Output: 1 if prime, 0 if not
+
+VAR num, 17
+VAR is_prime, 1
+VAR divisor, 2
+
+; Numbers less than 2 are not prime
+IF num < 2
+    SET is_prime, 0
+ENDIF
+
+; Check divisibility from 2 to num-1
+WHILE divisor < num
+    LOAD R1, num
+    LOAD R2, divisor
+    DIV R3, R1, R2
+    MUL R4, R3, R2
+
+    ; If R4 == num, then divisor divides num evenly
+    IF R4 == R1
+        SET is_prime, 0
+    ENDIF
+
+    INC divisor
+ENDWHILE
+
+PRINT is_prime
+HALT

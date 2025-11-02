@@ -1,0 +1,23 @@
+; Simple interactive calculator
+; Reads two numbers and adds them
+; Usage: Run and provide two numbers when prompted
+
+VAR num1, 0
+VAR num2, 0
+VAR result, 0
+
+; Read first number
+INPUT num1
+
+; Read second number
+INPUT num2
+
+; Perform addition
+LOAD R1, num1
+LOAD R2, num2
+ADD R3, R1, R2
+SET result, R3
+
+; Display result
+PRINT result
+HALT

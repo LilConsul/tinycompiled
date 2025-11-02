@@ -16,6 +16,14 @@ from pathlib import Path
 from src import compile_tc_to_nasm
 
 
+class CustomTextArea(TextArea):
+    """TextArea with explicit Ctrl+A binding for select all."""
+
+    BINDINGS = [
+        Binding("ctrl+a", "select_all", "Select All", show=False),
+    ]
+
+
 class SaveDialog(ModalScreen[tuple[str, str]]):
     """Modal dialog for saving files with directory browser."""
 
@@ -142,18 +150,17 @@ class TinyCompiledApp(App):
         Binding("ctrl+s", "save", "Save File", show=True, priority=True),
     ]
 
-
     tc_code = var("")
     nasm_code = var("")
 
     def compose(self) -> ComposeResult:
-        self.editor = TextArea(
+        self.editor = CustomTextArea(
             placeholder="Write TinyCompiled code here...",
             show_line_numbers=True,
             soft_wrap=False,
             tab_behavior="indent",
         )
-        self.output = TextArea(
+        self.output = CustomTextArea(
             "NASM translation will appear here.",
             read_only=True,
             show_line_numbers=True,

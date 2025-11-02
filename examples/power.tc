@@ -1,0 +1,25 @@
+; Calculate x to the power of y
+; Example: 2^8 = 256
+
+FUNC power
+    VAR result, 1
+    VAR counter, 0
+
+    WHILE counter < y
+        LOAD R1, result
+        LOAD R2, x
+        MUL R3, R1, R2
+        SET result, R3
+        INC counter
+    ENDWHILE
+
+    LOAD R1, result
+    RET R1
+ENDFUNC
+
+; Main program
+VAR x, 2
+VAR y, 8
+CALL power
+PRINT R1
+HALT

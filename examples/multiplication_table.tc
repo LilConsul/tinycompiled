@@ -1,0 +1,19 @@
+; Print a 5x5 multiplication table
+; Demonstrates nested loops
+
+VAR i, 1
+VAR j, 1
+
+WHILE i <= 5
+    SET j, 1
+    WHILE j <= 5
+        LOAD R1, i
+        LOAD R2, j
+        MUL R3, R1, R2
+        PRINT R3
+        INC j
+    ENDWHILE
+    INC i
+ENDWHILE
+
+HALT

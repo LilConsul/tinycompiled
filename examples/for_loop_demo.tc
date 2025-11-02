@@ -1,0 +1,19 @@
+; Demonstrate FOR loop with different step values
+; Shows counting forward and backward
+
+; Count from 1 to 10 (step 1)
+FOR i FROM 1 TO 10
+    PRINT i
+ENDFOR
+
+; Count from 0 to 20 (step 2)
+FOR j FROM 0 TO 20 STEP 2
+    PRINT j
+ENDFOR
+
+; Count from 10 to 1 (step -1)
+FOR k FROM 10 TO 1 STEP -1
+    PRINT k
+ENDFOR
+
+HALT
