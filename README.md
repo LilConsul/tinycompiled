@@ -11,7 +11,7 @@ developers understand the fundamentals of low-level programming, assembly langua
 on demonstrating how high-level instructions are translated into assembly code, providing an intuitive and interactive
 experience for learning and experimentation.
 
-## Overview
+## 📖 Overview
 
 TinyCompiled takes programs written in **TinyCompiled** (`.tc` files) — a simplified, human-readable assembly-like
 language — and translates them into real **x86-64 NASM assembly**, allowing users to see exactly how each instruction
@@ -19,7 +19,7 @@ maps to low-level operations. By combining compilation with visualization, TinyC
 programming concepts and the underlying machine instructions, making it a powerful tool for students, educators, and
 hobbyists.
 
-## Key Features
+## ✨ Key Features
 
 ### 🔄 TinyCompiled (.tc) → NASM Translation
 
@@ -64,9 +64,9 @@ TinyCompiled supports:
 - **Comments**: Semicolon-prefixed single-line comments
 - **Literals**: Decimal, hexadecimal (0x), and binary (0b) numbers
 
-## Architecture
+## 🏗️ Architecture
 
-### Compilation Pipeline
+### 🔄 Compilation Pipeline
 
 TinyCompiled follows a traditional compiler architecture:
 
@@ -74,7 +74,7 @@ TinyCompiled follows a traditional compiler architecture:
 2. **Syntax Analysis** (`src/parser/`): Parses tokens into an Abstract Syntax Tree (AST)
 3. **Code Generation** (`src/generator/`): Translates AST into NASM x86-64 assembly code
 
-### Virtual Registers
+### 🎯 Virtual Registers
 
 TinyCompiled provides 8 virtual registers that map to x86-64 registers:
 
@@ -87,13 +87,13 @@ TinyCompiled provides 8 virtual registers that map to x86-64 registers:
 - R7 → r8
 - R8 → r9
 
-### Memory Model
+### 💾 Memory Model
 
 - **Variables**: Stored in the `.data` section with labels
 - **Stack**: Used for function calls and local variables
 - **Heap**: Not directly supported (assembly-level memory management)
 
-## Example
+## 💡 Example
 
 Here's a simple example demonstrating TinyCompiled syntax:
 
@@ -135,9 +135,9 @@ Check the [`examples/`](examples/) directory for more demonstrations including:
 - `bitwise_demo.tc` - Bitwise operations
 - And more!
 
-## Installation
+## 📦 Installation
 
-### Prerequisites
+### ⚙️ Prerequisites
 
 Before installing TinyCompiled, you need to install the following dependencies:
 
@@ -145,7 +145,7 @@ Before installing TinyCompiled, you need to install the following dependencies:
 - **NASM Assembler** (required for building/running programs) - [Install NASM](https://www.nasm.us/)
 - **Linker (ld)** - Usually pre-installed on Linux/macOS. Windows users need WSL for the full build pipeline.
 
-### Install from Source
+### 🔧 Install from Source
 
 ```bash
 git clone https://github.com/LilConsul/tinycompiled.git
@@ -155,9 +155,9 @@ uv sync
 
 This will install all Python dependencies and set up the virtual environment.
 
-## Usage
+## 🚀 Usage
 
-### CLI Usage
+### 💻 CLI Usage
 
 Run TinyCompiled commands using `uv run`:
 
@@ -197,7 +197,7 @@ uv run cli.py compile examples/fibonacci.tc --verbose
 uv run cli.py compile examples/fibonacci.tc --debug
 ```
 
-### GUI Usage
+### 🖥️ GUI Usage
 
 Launch the interactive GUI editor:
 
@@ -214,7 +214,7 @@ This launches the interactive Textual-based editor where you can:
 - Ctrl+S - Save files (shows file save dialog)
 - Ctrl+Q - Quit the application
 
-#### GUI Features
+#### ⚡ GUI Features
 
 **File Save Dialog:**
 
@@ -228,11 +228,11 @@ The GUI provides helpful error messages with line numbers and context:
 
 ![Error Message 2](img/error-msg-2.png)
 
-### Language Syntax
+### 📝 Language Syntax
 
 See [`docs/`](docs/DOCUMENTATION.md) for complete language reference.
 
-### Quick Reference
+### 📋 Quick Reference
 
 **Registers:** R1-R8 (mapped to x86-64 registers: rax, rbx, rcx, rdx, rsi, rdi, r8, r9)
 
@@ -336,11 +336,11 @@ NOP               ; No operation
 ; comment         ; Single-line comment
 ```
 
-## Architecture
+## 🏗️ Architecture
 
 See `docs/DOCUMENTATION.md` for complete language reference.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 tinycompiled/
@@ -374,18 +374,18 @@ tinycompiled/
 └── pyproject.toml           # Project configuration
 ```
 
-## Project Goals
+## 🎯 Project Goals
 
 - **Educational Focus**: Help beginners understand assembly language and low-level programming concepts
 - **Interactive Learning**: Provide real-time visualization of code translation
 - **Accessibility**: Make assembly language learning approachable and engaging
 - **Practical Knowledge**: Bridge the gap between high-level and low-level programming
 
-## License
+## 📄 License
 
 This project is provided for educational purposes. Please refer to the repository for specific licensing information.
 
-## References
+## 🔗 References
 
 - [GitHub Repository](https://github.com/LilConsul/tinycompiled)
 - [NASM Assembler Documentation](https://www.nasm.us/docs.html)
