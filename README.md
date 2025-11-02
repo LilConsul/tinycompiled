@@ -2,7 +2,9 @@
 
 **A Small Educational Compiler and Visualizer for Assembly Language Learning**
 
-Authors: Denys Shevchenko, Yehor Karabanov
+![TinyCompiled GUI](img/coding.png)
+
+**Authors:** Denys Shevchenko, Yehor Karabanov
 
 TinyCompiled is a small educational compiler and visualizer for a custom assembly-like language designed to help new developers understand the fundamentals of low-level programming, assembly language, and compilation. The project focuses on demonstrating how high-level instructions are translated into assembly code, providing an intuitive and interactive experience for learning and experimentation.
 
@@ -84,53 +86,54 @@ TinyCompiled provides 8 virtual registers that map to x86-64 registers:
 
 ## Example
 
-### TinyCompiled (.tc) File
+Here's a simple example demonstrating TinyCompiled syntax:
 
 ```assembly
-; Simple arithmetic example
-VAR x, 10
-VAR y, 20
+; Calculate sum of numbers from 1 to 100
+; Result: 5050
 
-LOAD R1, x      ; Load x into R1
-LOAD R2, y      ; Load y into R2
-ADD R3, R1, R2  ; R3 = R1 + R2
-PRINT R3        ; Print result
+VAR n, 100
+VAR sum, 0
+VAR i, 1
+
+WHILE i <= n
+    LOAD R1, sum
+    LOAD R2, i
+    ADD R3, R1, R2
+    SET sum, R3
+    INC i
+ENDWHILE
+
+PRINT sum
 HALT
 ```
 
-### Generated NASM Assembly
-
-```nasm
-section .data
-    x dq 10
-    y dq 20
-
-section .text
-    global _start
-
-_start:
-    mov rax, [x]      ; LOAD R1, x
-    mov rbx, [y]      ; LOAD R2, y
-    add rcx, rax      ; ADD R3, R1, R2
-    add rcx, rbx
-    mov rax, rcx      ; PRINT R3
-    call print_int
-    mov rax, 60       ; HALT
-    xor rdi, rdi
-    syscall
-
-; Helper functions for I/O
-print_int:
-    ; ... (implementation details)
+**Run it:**
+```bash
+uv run cli.py run examples/sum.tc
+# Output: 5050
 ```
+
+**More Examples:**
+
+Check the [`examples/`](examples/) directory for more demonstrations including:
+- `fibonacci.tc` - Fibonacci sequence with functions
+- `prime_check.tc` - Prime number checker
+- `calculator.tc` - Interactive calculator
+- `for_loop_demo.tc` - FOR loop variations
+- `bitwise_demo.tc` - Bitwise operations
+- And more!
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.14+
-- NASM assembler (for building executables)
-- LD linker (for building executables)
+Before installing TinyCompiled, you need to install the following dependencies:
+
+- **Python 3.14+** - [Download Python](https://www.python.org/downloads/)
+- **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **NASM Assembler** (required for building/running programs) - [Install NASM](https://www.nasm.us/)
+- **Linker (ld)** - Usually pre-installed on Linux/macOS. Windows users need WSL for the full build pipeline.
 
 ### Install from Source
 
@@ -140,39 +143,175 @@ cd tinycompiled
 uv sync
 ```
 
-### Dependencies
-
-- `click>=8.3.0` - Command-line interface
-- `textual[syntax]>=6.4.0` - Terminal user interface
+This will install all Python dependencies and set up the virtual environment.
 
 ## Usage
 
 ### CLI Usage
 
+Run TinyCompiled commands using `uv run`:
+
+**Compile to NASM Assembly:**
 ```bash
-# Compile to NASM assembly
-tinycompiled compile examples/fibonacci.tc output.asm
+uv run cli.py compile examples/sum.tc output.asm
+```
 
-# Build executable
-tinycompiled build examples/fibonacci.tc fibonacci
+Or output to stdout:
+```bash
+uv run cli.py compile examples/sum.tc
+```
 
-# Compile and run
-tinycompiled run examples/fibonacci.tc
+**Build Executable (Linux/macOS):**
+```bash
+uv run cli.py build examples/sum.tc sum_program
+```
+
+**Compile and Run:**
+```bash
+uv run cli.py run examples/sum.tc
+```
+
+**Verbose Output:**
+```bash
+uv run cli.py compile examples/fibonacci.tc --verbose
+```
+
+**Debug Mode (shows tokens and AST):**
+```bash
+uv run cli.py compile examples/fibonacci.tc --debug
 ```
 
 ### GUI Usage
 
+Launch the interactive GUI editor:
+
 ```bash
-python main.py
+uv run gui.py
 ```
+
+![TinyCompiled GUI Interface](img/coding.png)
 
 This launches the interactive Textual-based editor where you can:
 - Write TinyCompiled code in the left pane
 - See real-time NASM translation in the right pane
-- Save files with Ctrl+S
-- Recompile with Ctrl+R
+- Save files with Ctrl+S (shows file save dialog)
+- Open files with Ctrl+O
+- Compile with Ctrl+R
+
+#### GUI Features
+
+**File Save Dialog:**
+
+![Save Dialog](img/save-screen.png)
+
+**Error Reporting:**
+
+The GUI provides helpful error messages with line numbers and context:
+
+![Error Message 1](img/error-msg.png)
+
+![Error Message 2](img/error-msg-2.png)
 
 ### Language Syntax
+
+See `docs/DOCUMENTATION.md` for complete language reference.
+
+#### Quick Reference
+
+**Registers:** R1-R8 (mapped to x86-64 registers: rax, rbx, rcx, rdx, rsi, rdi, r8, r9)
+
+**Variables:**
+```assembly
+VAR name, value    ; Declare and initialize
+VAR count          ; Declare without initialization
+```
+
+**Arithmetic:**
+```assembly
+ADD R1, R2, R3     ; R1 = R2 + R3
+SUB R1, R2, R3     ; R1 = R2 - R3
+MUL R1, R2, R3     ; R1 = R2 * R3
+DIV R1, R2, R3     ; R1 = R2 / R3
+INC var            ; var++
+DEC var            ; var--
+```
+
+**Bitwise Operations:**
+```assembly
+AND R1, R2, R3     ; R1 = R2 & R3
+OR R1, R2, R3      ; R1 = R2 | R3
+XOR R1, R2, R3     ; R1 = R2 ^ R3
+NOT R1, R2         ; R1 = ~R2
+SHL R1, R2, 2      ; R1 = R2 << 2
+SHR R1, R2, 2      ; R1 = R2 >> 2
+```
+
+**Data Movement:**
+```assembly
+LOAD R1, var       ; Load variable into register
+SET var, R1        ; Store register into variable
+MOVE R1, R2        ; Copy R2 to R1
+```
+
+**Control Flow:**
+```assembly
+IF condition
+    ; code
+ELSE
+    ; code
+ENDIF
+
+WHILE condition
+    ; code
+ENDWHILE
+
+FOR var FROM start TO end
+    ; code
+ENDFOR
+
+FOR var FROM start TO end STEP increment
+    ; code
+ENDFOR
+
+LOOP count
+    ; code
+ENDLOOP
+
+REPEAT
+    ; code
+UNTIL condition
+```
+
+**Functions:**
+```assembly
+FUNC function_name
+    ; function body
+    RET register
+ENDFUNC
+
+CALL function_name
+```
+
+**I/O:**
+```assembly
+PRINT register     ; Print integer value
+INPUT variable     ; Read integer from stdin
+```
+
+**Stack:**
+```assembly
+PUSH register
+POP register
+```
+
+**Other:**
+```assembly
+HALT              ; Exit program
+NOP               ; No operation
+; comment         ; Single-line comment
+```
+
+## Architecture
 
 See `docs/DOCUMENTATION.md` for complete language reference.
 
@@ -206,7 +345,7 @@ tinycompiled/
 │   ├── DOCUMENTATION.md     # Language reference
 │   └── USAGE.md             # Usage examples
 ├── cli.py                   # Command-line interface
-├── main.py                  # GUI application
+├── gui.py                   # GUI application
 └── pyproject.toml           # Project configuration
 ```
 
