@@ -634,11 +634,16 @@ class NasmGenerator:
 
         self.emit_label(start_label)
 
-        # Compare var > end (assuming step > 0)
+        # Compare based on step direction
         self.emit(f"mov r10, [{stmt.var}]")
         self.emit(f"mov r11, {stmt.end}")
         self.emit("cmp r10, r11")
-        self.emit(f"jg {end_label}")
+        if stmt.step > 0:
+            # For ascending: loop while var <= end, exit if var > end
+            self.emit(f"jg {end_label}")
+        else:
+            # For descending: loop while var >= end, exit if var < end
+            self.emit(f"jl {end_label}")
 
         # Body
         for s in stmt.body:
@@ -647,6 +652,8 @@ class NasmGenerator:
         # Increment var by step
         if stmt.step == 1:
             self.emit(f"inc qword [{stmt.var}]")
+        elif stmt.step == -1:
+            self.emit(f"dec qword [{stmt.var}]")
         else:
             self.emit(f"add qword [{stmt.var}], {stmt.step}")
 
