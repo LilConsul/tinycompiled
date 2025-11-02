@@ -1,19 +1,30 @@
 # TinyCompiled
+### **Authors:** Denys Shevchenko, Yehor Karabanov
 
-**A Small Educational Compiler and Visualizer for Assembly Language Learning**
+#### **A Small Educational Compiler and Visualizer for Assembly Language Learning**
 
-Authors: Denys Shevchenko, Yehor Karabanov
+![TinyCompiled GUI](img/coding.png)
 
-TinyCompiled is a small educational compiler and visualizer for a custom assembly-like language designed to help new developers understand the fundamentals of low-level programming, assembly language, and compilation. The project focuses on demonstrating how high-level instructions are translated into assembly code, providing an intuitive and interactive experience for learning and experimentation.
 
-## Overview
+TinyCompiled is a small educational compiler and visualizer for a custom assembly-like language designed to help new
+developers understand the fundamentals of low-level programming, assembly language, and compilation. The project focuses
+on demonstrating how high-level instructions are translated into assembly code, providing an intuitive and interactive
+experience for learning and experimentation.
 
-TinyCompiled takes programs written in **TinyCompiled** (`.tc` files) — a simplified, human-readable assembly-like language — and translates them into real **x86-64 NASM assembly**, allowing users to see exactly how each instruction maps to low-level operations. By combining compilation with visualization, TinyCompiled bridges the gap between abstract programming concepts and the underlying machine instructions, making it a powerful tool for students, educators, and hobbyists.
+## 📖 Overview
 
-## Key Features
+TinyCompiled takes programs written in **TinyCompiled** (`.tc` files) — a simplified, human-readable assembly-like
+language — and translates them into real **x86-64 NASM assembly**, allowing users to see exactly how each instruction
+maps to low-level operations. By combining compilation with visualization, TinyCompiled bridges the gap between abstract
+programming concepts and the underlying machine instructions, making it a powerful tool for students, educators, and
+hobbyists.
+
+## ✨ Key Features
 
 ### 🔄 TinyCompiled (.tc) → NASM Translation
+
 TinyCompiled converts TinyCompiled instructions into NASM assembly line by line, including:
+
 - Arithmetic operations (ADD, SUB, MUL, DIV)
 - Logical/bitwise operations (AND, OR, XOR, NOT, SHL, SHR)
 - Data movement (LOAD, SET, MOVE)
@@ -23,28 +34,28 @@ TinyCompiled converts TinyCompiled instructions into NASM assembly line by line,
 - Stack operations (PUSH, POP)
 - Special instructions (HALT, NOP)
 
-Each translation preserves the logical structure of the program, making it easy to follow and understand how high-level logic is implemented in assembly.
+Each translation preserves the logical structure of the program, making it easy to follow and understand how high-level
+logic is implemented in assembly.
 
 ### 📊 Side-by-Side Visualization
-Using the **Textualize/Textual** Python library, TinyCompiled displays TinyCompiled code alongside its NASM translation in a diff-style table. This visualization allows users to clearly see the mapping between abstract instructions and real machine operations, highlighting the effect of each line in an interactive terminal interface.
 
-### 💻 CLI Interface
-The command-line interface provides simple commands for:
-- `tinycompiled compile INPUT_FILE [OUTPUT_FILE]` - Compile to NASM assembly (outputs to stdout if OUTPUT_FILE not provided)
-- `tinycompiled build INPUT_FILE OUTPUT_FILE` - Compile to executable binary
-- `tinycompiled run INPUT_FILE [--output OUTPUT_FILE]` - Compile and run program (temporary executable if OUTPUT_FILE not provided)
-
-All commands support `--verbose` and `--debug` options for additional output.
+Using the **Textualize/Textual** Python library, TinyCompiled displays TinyCompiled code alongside its NASM translation
+in a diff-style table. This visualization allows users to clearly see the mapping between abstract instructions and real
+machine operations, highlighting the effect of each line in an interactive terminal interface.
 
 ### 🖥️ GUI Interface
+
 The graphical interface provides:
+
 - Real-time code editor for TinyCompiled
 - Live compilation and preview of NASM output
 - File save/load functionality
 - Interactive terminal-based UI using Textual
 
 ### 📝 Language Features
+
 TinyCompiled supports:
+
 - **8 virtual registers**: R1-R8 (mapped to x86-64 registers)
 - **Variables**: User-defined identifiers with optional initialization
 - **Functions**: Named subroutines with parameters and return values
@@ -53,9 +64,9 @@ TinyCompiled supports:
 - **Comments**: Semicolon-prefixed single-line comments
 - **Literals**: Decimal, hexadecimal (0x), and binary (0b) numbers
 
-## Architecture
+## 🏗️ Architecture
 
-### Compilation Pipeline
+### 🔄 Compilation Pipeline
 
 TinyCompiled follows a traditional compiler architecture:
 
@@ -63,7 +74,7 @@ TinyCompiled follows a traditional compiler architecture:
 2. **Syntax Analysis** (`src/parser/`): Parses tokens into an Abstract Syntax Tree (AST)
 3. **Code Generation** (`src/generator/`): Translates AST into NASM x86-64 assembly code
 
-### Virtual Registers
+### 🎯 Virtual Registers
 
 TinyCompiled provides 8 virtual registers that map to x86-64 registers:
 
@@ -76,63 +87,65 @@ TinyCompiled provides 8 virtual registers that map to x86-64 registers:
 - R7 → r8
 - R8 → r9
 
-### Memory Model
+### 💾 Memory Model
 
 - **Variables**: Stored in the `.data` section with labels
 - **Stack**: Used for function calls and local variables
 - **Heap**: Not directly supported (assembly-level memory management)
 
-## Example
+## 💡 Example
 
-### TinyCompiled (.tc) File
+Here's a simple example demonstrating TinyCompiled syntax:
 
 ```assembly
-; Simple arithmetic example
-VAR x, 10
-VAR y, 20
+; Calculate sum of numbers from 1 to 100
+; Result: 5050
 
-LOAD R1, x      ; Load x into R1
-LOAD R2, y      ; Load y into R2
-ADD R3, R1, R2  ; R3 = R1 + R2
-PRINT R3        ; Print result
+VAR n, 100
+VAR sum, 0
+VAR i, 1
+
+WHILE i <= n
+    LOAD R1, sum
+    LOAD R2, i
+    ADD R3, R1, R2
+    SET sum, R3
+    INC i
+ENDWHILE
+
+PRINT sum
 HALT
 ```
 
-### Generated NASM Assembly
+**Run it:**
 
-```nasm
-section .data
-    x dq 10
-    y dq 20
-
-section .text
-    global _start
-
-_start:
-    mov rax, [x]      ; LOAD R1, x
-    mov rbx, [y]      ; LOAD R2, y
-    add rcx, rax      ; ADD R3, R1, R2
-    add rcx, rbx
-    mov rax, rcx      ; PRINT R3
-    call print_int
-    mov rax, 60       ; HALT
-    xor rdi, rdi
-    syscall
-
-; Helper functions for I/O
-print_int:
-    ; ... (implementation details)
+```bash
+uv run cli.py run examples/sum.tc
+# Output: 5050
 ```
 
-## Installation
+**More Examples:**
 
-### Prerequisites
+Check the [`examples/`](examples/) directory for more demonstrations including:
 
-- Python 3.14+
-- NASM assembler (for building executables)
-- LD linker (for building executables)
+- `fibonacci.tc` - Fibonacci sequence with functions
+- `prime_check.tc` - Prime number checker
+- `calculator.tc` - Interactive calculator
+- `for_loop_demo.tc` - FOR loop variations
+- `bitwise_demo.tc` - Bitwise operations
+- And more!
 
-### Install from Source
+## 📦 Installation
+
+### ⚙️ Prerequisites
+
+Before installing TinyCompiled, you need to install the following dependencies:
+
+- **UV Package Manager** - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **NASM Assembler** (required for building/running programs) - [Install NASM](https://www.nasm.us/)
+- **Linker (ld)** - Usually pre-installed on Linux/macOS. Windows users need WSL for the full build pipeline.
+
+### 🔧 Install from Source
 
 ```bash
 git clone https://github.com/LilConsul/tinycompiled.git
@@ -140,43 +153,194 @@ cd tinycompiled
 uv sync
 ```
 
-### Dependencies
+This will install all Python dependencies and set up the virtual environment.
 
-- `click>=8.3.0` - Command-line interface
-- `textual[syntax]>=6.4.0` - Terminal user interface
+## 🚀 Usage
 
-## Usage
+### 💻 CLI Usage
 
-### CLI Usage
+Run TinyCompiled commands using `uv run`:
 
-```bash
-# Compile to NASM assembly
-tinycompiled compile examples/fibonacci.tc output.asm
-
-# Build executable
-tinycompiled build examples/fibonacci.tc fibonacci
-
-# Compile and run
-tinycompiled run examples/fibonacci.tc
-```
-
-### GUI Usage
+**Compile to NASM Assembly:**
 
 ```bash
-python main.py
+uv run cli.py compile examples/sum.tc output.asm
 ```
+
+Or output to stdout:
+
+```bash
+uv run cli.py compile examples/sum.tc
+```
+
+**Build Executable (Linux/macOS):**
+
+```bash
+uv run cli.py build examples/sum.tc sum_program
+```
+
+**Compile and Run:**
+
+```bash
+uv run cli.py run examples/sum.tc
+```
+
+**Verbose Output:**
+
+```bash
+uv run cli.py compile examples/fibonacci.tc --verbose
+```
+
+**Debug Mode (shows tokens and AST):**
+
+```bash
+uv run cli.py compile examples/fibonacci.tc --debug
+```
+
+### 🖥️ GUI Usage
+
+Launch the interactive GUI editor:
+
+```bash
+uv run gui.py
+```
+
+![TinyCompiled GUI Interface](img/coding.png)
 
 This launches the interactive Textual-based editor where you can:
-- Write TinyCompiled code in the left pane
-- See real-time NASM translation in the right pane
-- Save files with Ctrl+S
-- Recompile with Ctrl+R
 
-### Language Syntax
+- Write TinyCompiled code in the left pane
+- Ctrl+R - See real-time NASM translation in the right pane hit
+- Ctrl+S - Save files (shows file save dialog)
+- Ctrl+Q - Quit the application
+
+#### ⚡ GUI Features
+
+**File Save Dialog:**
+
+![Save Dialog](img/save-screen.png)
+
+**Error Reporting:**
+
+The GUI provides helpful error messages with line numbers and context:
+
+![Error Message 1](img/error-msg.png)
+
+![Error Message 2](img/error-msg-2.png)
+
+### 📝 Language Syntax
+
+See [`docs/`](docs/DOCUMENTATION.md) for complete language reference.
+
+### 📋 Quick Reference
+
+**Registers:** R1-R8 (mapped to x86-64 registers: rax, rbx, rcx, rdx, rsi, rdi, r8, r9)
+
+**Variables:**
+
+```assembly
+VAR name, value    ; Declare and initialize
+VAR count          ; Declare without initialization
+```
+
+**Arithmetic:**
+
+```assembly
+ADD R1, R2, R3     ; R1 = R2 + R3
+SUB R1, R2, R3     ; R1 = R2 - R3
+MUL R1, R2, R3     ; R1 = R2 * R3
+DIV R1, R2, R3     ; R1 = R2 / R3
+INC var            ; var++
+DEC var            ; var--
+```
+
+**Bitwise Operations:**
+
+```assembly
+AND R1, R2, R3     ; R1 = R2 & R3
+OR R1, R2, R3      ; R1 = R2 | R3
+XOR R1, R2, R3     ; R1 = R2 ^ R3
+NOT R1, R2         ; R1 = ~R2
+SHL R1, R2, 2      ; R1 = R2 << 2
+SHR R1, R2, 2      ; R1 = R2 >> 2
+```
+
+**Data Movement:**
+
+```assembly
+LOAD R1, var       ; Load variable into register
+SET var, R1        ; Store register into variable
+MOVE R1, R2        ; Copy R2 to R1
+```
+
+**Control Flow:**
+
+```assembly
+IF condition
+    ; code
+ELSE
+    ; code
+ENDIF
+
+WHILE condition
+    ; code
+ENDWHILE
+
+FOR var FROM start TO end
+    ; code
+ENDFOR
+
+FOR var FROM start TO end STEP increment
+    ; code
+ENDFOR
+
+LOOP count
+    ; code
+ENDLOOP
+
+REPEAT
+    ; code
+UNTIL condition
+```
+
+**Functions:**
+
+```assembly
+FUNC function_name
+    ; function body
+    RET register
+ENDFUNC
+
+CALL function_name
+```
+
+**I/O:**
+
+```assembly
+PRINT register     ; Print integer value
+INPUT variable     ; Read integer from stdin
+```
+
+**Stack:**
+
+```assembly
+PUSH register
+POP register
+```
+
+**Other:**
+
+```assembly
+HALT              ; Exit program
+NOP               ; No operation
+; comment         ; Single-line comment
+```
+
+## 🏗️ Architecture
 
 See `docs/DOCUMENTATION.md` for complete language reference.
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 tinycompiled/
@@ -206,33 +370,23 @@ tinycompiled/
 │   ├── DOCUMENTATION.md     # Language reference
 │   └── USAGE.md             # Usage examples
 ├── cli.py                   # Command-line interface
-├── main.py                  # GUI application
+├── gui.py                   # GUI application
 └── pyproject.toml           # Project configuration
 ```
 
-## Project Goals
+## 🎯 Project Goals
 
 - **Educational Focus**: Help beginners understand assembly language and low-level programming concepts
 - **Interactive Learning**: Provide real-time visualization of code translation
 - **Accessibility**: Make assembly language learning approachable and engaging
 - **Practical Knowledge**: Bridge the gap between high-level and low-level programming
 
-## Contributing
-
-Contributions are welcome! Areas for improvement:
-- Additional language features (strings, arrays, floating-point)
-- More sophisticated optimization passes
-- Web-based interface
-- Support for additional target architectures
-- Enhanced error reporting and debugging
-
-## License
+## 📄 License
 
 This project is provided for educational purposes. Please refer to the repository for specific licensing information.
 
-## References
+## 🔗 References
 
 - [GitHub Repository](https://github.com/LilConsul/tinycompiled)
-- x86-64 Assembly Language Resources
-- NASM Assembler Documentation
-- Textual Framework Documentation
+- [NASM Assembler Documentation](https://www.nasm.us/docs.html)
+- [Textual Framework Documentation](https://textual.textualize.io/)
