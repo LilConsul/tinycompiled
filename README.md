@@ -1,10 +1,10 @@
 # TinyCompiled
+### **Authors:** Denys Shevchenko, Yehor Karabanov
 
-**A Small Educational Compiler and Visualizer for Assembly Language Learning**
+#### **A Small Educational Compiler and Visualizer for Assembly Language Learning**
 
 ![TinyCompiled GUI](img/coding.png)
 
-**Authors:** Denys Shevchenko, Yehor Karabanov
 
 TinyCompiled is a small educational compiler and visualizer for a custom assembly-like language designed to help new
 developers understand the fundamentals of low-level programming, assembly language, and compilation. The project focuses
