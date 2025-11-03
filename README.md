@@ -1,10 +1,10 @@
 # TinyCompiled
+
+## **A Small Educational Compiler and Visualizer for Assembly Language Learning**
+
 ### **Authors:** Denys Shevchenko, Yehor Karabanov
 
-#### **A Small Educational Compiler and Visualizer for Assembly Language Learning**
-
 ![TinyCompiled GUI](img/coding.png)
-
 
 TinyCompiled is a small educational compiler and visualizer for a custom assembly-like language designed to help new
 developers understand the fundamentals of low-level programming, assembly language, and compilation. The project focuses
@@ -210,7 +210,7 @@ uv run gui.py
 This launches the interactive Textual-based editor where you can:
 
 - Write TinyCompiled code in the left pane
-- Ctrl+R - See real-time NASM translation in the right pane hit
+- Ctrl+R - See real-time NASM translation in the right pane
 - Ctrl+S - Save files (shows file save dialog)
 - Ctrl+Q - Quit the application
 
@@ -338,7 +338,18 @@ NOP               ; No operation
 
 ## 🏗️ Architecture
 
-See `docs/DOCUMENTATION.md` for complete language reference.
+TinyCompiled is organized into modular components that reflect the typical stages of a compiler:
+
+- **Lexer**: Tokenizes the input `.tc` source files into a stream of tokens.
+- **Parser**: Analyzes the token stream and builds an Abstract Syntax Tree (AST).
+- **AST**: Represents the program structure in a tree format for further processing.
+- **Code Generator**: Converts the intermediate representation of AST into x86-64 NASM assembly code.
+- **Compiler**: Coordinates the general compilation pipeline.
+- **Visualizer/GUI**: Provides an interactive interface for users to write, compile, and visualize code execution.
+  Each component is organized in its own subdirectory within `src/`, promoting separation of concerns and ease of
+  maintenance.
+  For a complete language reference and further architectural details, see [
+  `docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md).
 
 ## 📁 Project Structure
 
