@@ -189,8 +189,8 @@ ENDIF
 
 ## 8. Stack Operations
 
-- [ ] `PUSH register` - Push register value onto stack
-- [ ] `POP register` - Pop value from stack into register
+- [x] `PUSH register` - Push register value onto stack
+- [x] `POP register` - Pop value from stack into register
 
 **Examples:**
 
