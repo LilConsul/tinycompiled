@@ -401,6 +401,8 @@ tinycompiled/
 - **Accessibility**: Make assembly language learning approachable and engaging
 - **Practical Knowledge**: Bridge the gap between high-level and low-level programming
 
+## 📚 Documentation Links
+
 - [Language Documentation](docs/DOCUMENTATION.md) - Complete guide and examples
 - [Formal Definition](docs/DEFINITION.md) - BNF grammar and language specification
 
