@@ -230,7 +230,8 @@ The GUI provides helpful error messages with line numbers and context:
 
 ### 📝 Language Syntax
 
-See [`docs/`](docs/DOCUMENTATION.md) for complete language reference.
+See [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md) for complete language reference and [
+`docs/DEFINITION.md`](docs/DEFINITION.md) for the formal language definition.
 
 ### 📋 Quick Reference
 
@@ -346,10 +347,17 @@ TinyCompiled is organized into modular components that reflect the typical stage
 - **Code Generator**: Converts the intermediate representation of AST into x86-64 NASM assembly code.
 - **Compiler**: Coordinates the general compilation pipeline.
 - **Visualizer/GUI**: Provides an interactive interface for users to write, compile, and visualize code execution.
-  Each component is organized in its own subdirectory within `src/`, promoting separation of concerns and ease of
-  maintenance.
-  For a complete language reference and further architectural details, see [
-  `docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md).
+
+Each component is organized in its own subdirectory within `src/`, promoting separation of concerns and ease of
+maintenance.
+
+## 📚 Documentation
+
+For comprehensive documentation, see:
+
+- [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md) - Complete language reference and usage guide
+- [`docs/DEFINITION.md`](docs/DEFINITION.md) - Formal language definition with BNF grammar, semantic rules, and
+  specifications
 
 ## 📁 Project Structure
 
@@ -379,6 +387,7 @@ tinycompiled/
 │   └── ...
 ├── docs/
 │   ├── DOCUMENTATION.md     # Language reference
+│   ├── DEFINITION.md        # Formal language definition
 │   └── USAGE.md             # Usage examples
 ├── cli.py                   # Command-line interface
 ├── gui.py                   # GUI application
@@ -391,6 +400,9 @@ tinycompiled/
 - **Interactive Learning**: Provide real-time visualization of code translation
 - **Accessibility**: Make assembly language learning approachable and engaging
 - **Practical Knowledge**: Bridge the gap between high-level and low-level programming
+
+- [Language Documentation](docs/DOCUMENTATION.md) - Complete guide and examples
+- [Formal Definition](docs/DEFINITION.md) - BNF grammar and language specification
 
 ## 📄 License
 
