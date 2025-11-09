@@ -410,8 +410,63 @@ tinycompiled/
 
 This project is provided for educational purposes. Please refer to the repository for specific licensing information.
 
-## 🔗 References
+## 📖 Academic References
+
+This project implements fundamental compiler construction concepts based on established theory and practices described in the following academic sources:
+
+### Textbooks
+
+1. **Louden, K. C.** (1997). *Compiler Construction: Principles and Practice*. PWS Publishing Company.
+   - Used for understanding lexical analysis, parsing techniques, and code generation principles
+   - Chapter 2: Scanning (Lexer implementation)
+   - Chapter 4: Top-Down Parsing (Recursive descent parser design)
+   - Chapter 6: Code Generation (Assembly code generation strategies)
+
+2. **Aho, A. V., Lam, M. S., Sethi, R., & Ullman, J. D.** (2006). *Compilers: Principles, Techniques, and Tools* (2nd ed.). Pearson.
+   - Reference for compiler architecture and intermediate representations
+   - Token design and symbol table management
+   - Abstract Syntax Tree (AST) construction
+
+3. **Appel, A. W.** (2004). *Modern Compiler Implementation in C*. Cambridge University Press.
+   - Code generation for x86-64 architecture
+   - Register allocation strategies
+
+### Compiler Design Concepts Applied
+
+- **Lexical Analysis**: Token-based scanning following Louden's finite automata approach (Chapter 2)
+- **Syntax Analysis**: Recursive descent parser implementation based on LL(1) grammar principles (Louden Chapter 4)
+- **Abstract Syntax Trees**: Intermediate representation following standard compiler design patterns (Aho et al., Chapter 5)
+- **Code Generation**: Direct translation to NASM assembly using template-based code generation (Louden Chapter 6)
+- **Symbol Table**: Variable and function name management following standard compiler practices
+
+### Related Projects and Resources
+
+**Awesome Compilers** - A curated list of educational compiler resources  
+Repository: https://github.com/aalhour/awesome-compilers  
+Maintainer: Ahmed Aalhour (@aalhour)
+
+This comprehensive collection of compiler construction resources includes:
+- Educational compiler implementations in various languages
+- Academic papers and tutorials on compiler theory
+- Links to textbooks and learning materials
+- Examples of teaching compilers and language implementations
+
+We referenced this repository during the research phase to:
+- Explore different approaches to educational compiler design
+- Study similar projects targeting assembly code generation
+- Understand best practices in compiler construction pedagogy
+- Identify gaps in existing educational tools that TinyCompiled addresses
+
+**What makes TinyCompiled unique:**
+- **Interactive visualization**: Side-by-side TUI showing source code and generated NASM assembly in real-time
+- **Simplified instruction set**: Only 8 registers and intuitive assembly-like syntax designed specifically for beginners
+- **Educational focus**: Explicit mapping between high-level constructs and x86-64 assembly instructions
+- **Immediate feedback**: GUI with live compilation and detailed error messages with line numbers
+- **Complete toolchain**: Integrated compilation, assembly, and execution pipeline
+
+## 🔗 Technical References
 
 - [GitHub Repository](https://github.com/LilConsul/tinycompiled)
-- [NASM Assembler Documentation](https://www.nasm.us/docs.html)
-- [Textual Framework Documentation](https://textual.textualize.io/)
+- [NASM Assembler Documentation](https://www.nasm.us/docs.html) - Target assembly language specification
+- [Textual Framework Documentation](https://textual.textualize.io/) - GUI implementation framework
+- [x86-64 ABI Reference](https://refspecs.linuxfoundation.org/elf/x86_64-abi-0.99.pdf) - Calling conventions and register usage

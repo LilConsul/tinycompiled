@@ -592,3 +592,49 @@ HALT NOP
 - **Nesting depth:** Unlimited (implementation-dependent)
 - **Number of variables:** Unlimited (memory-dependent)
 - **Number of functions:** Unlimited (memory-dependent)
+
+## 10. Theoretical Foundations
+
+This language definition follows principles from compiler construction literature:
+
+### 10.1 Lexical Analysis (Section 2)
+
+The lexical structure described in Section 2 implements concepts from:
+- **Louden (1997), Chapter 2**: Regular expressions and finite automata for token recognition
+- Token classification follows standard compiler design patterns (keywords, identifiers, literals, operators)
+
+### 10.2 Syntax Definition (Section 3)
+
+The BNF grammar notation and syntax rules follow:
+- **Louden (1997), Chapter 3**: Context-free grammars and BNF notation
+- **Aho et al. (2006), Chapter 4**: Syntax-directed translation
+- Recursive descent parsing compatible grammar structure
+
+### 10.3 Semantic Rules (Section 4)
+
+Semantic constraints described in Section 4 implement:
+- **Louden (1997), Chapter 6**: Symbol tables and scope management
+- Type checking (simplified to single integer type)
+- Name resolution and declaration-before-use enforcement
+
+### 10.4 Code Generation (Section 5)
+
+The compilation model targeting x86-64 NASM follows:
+- **Louden (1997), Chapter 8**: Code generation principles
+- **Appel (2004)**: Modern compiler implementation techniques for x86-64
+- Direct mapping of high-level constructs to assembly instructions
+
+## 11. References
+
+1. **Louden, K. C.** (1997). *Compiler Construction: Principles and Practice*. PWS Publishing Company.
+
+2. **Aho, A. V., Lam, M. S., Sethi, R., & Ullman, J. D.** (2006). *Compilers: Principles, Techniques, and Tools* (2nd ed.). Pearson Education.
+
+3. **Appel, A. W.** (2004). *Modern Compiler Implementation in C*. Cambridge University Press.
+
+4. **Aalhour, A.** (2024). *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers
+
+5. **Intel Corporation** (2023). *Intel® 64 and IA-32 Architectures Software Developer's Manual*.
+
+6. **NASM Development Team** (2023). *NASM - The Netwide Assembler Documentation*.
+
