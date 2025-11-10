@@ -4,15 +4,6 @@
 
 TinyCompiled is a low-level assembly-like programming language that compiles to x86-64 NASM assembly. It provides a simple, instruction-based syntax with support for variables, registers, functions, control flow, and basic I/O operations.
 
-**Theoretical Foundation:**
-This language definition and implementation are based on compiler construction principles described in Kenneth C. Louden's "Compiler Construction: Principles and Practice" (PWS Publishing, 1997). The design follows traditional compiler phases (lexical analysis, parsing, semantic analysis, code generation) as outlined in Louden's Chapters 1-8, with particular emphasis on:
-- Chapter 2: Lexical analysis and token design
-- Chapter 3-4: Context-free grammars and top-down parsing
-- Chapter 6: Semantic analysis and symbol tables
-- Chapter 8: Code generation for assembly language targets
-
-This formal specification serves both as a language reference and as documentation of our educational compiler implementation experience.
-
 ## 2. Lexical Structure
 
 ### 2.1 Character Set
