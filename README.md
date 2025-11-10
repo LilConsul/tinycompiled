@@ -607,20 +607,6 @@ After analyzing dozens of educational compiler projects, we designed TinyCompile
 - Both interfaces provide the same powerful features
 - Switch between modes based on task and preference
 
-### Comparative Feature Matrix
-
-| Feature | TinyCompiled | Typical Tutorial Compiler | LLVM-Based Educational Compiler |
-|---------|--------------|---------------------------|----------------------------------|
-| **From-Scratch Implementation** | ✅ Yes | ⚠️ Partial | ❌ No (uses LLVM) |
-| **Real-Time Visualization** | ✅ Side-by-side TUI | ❌ Batch only | ❌ Batch only |
-| **Real Hardware Target** | ✅ x86-64 NASM | ❌ Virtual machine | ✅ Via LLVM |
-| **Beginner-Friendly Syntax** | ✅ Simplified ASM-like | ⚠️ C-like (complex) | ⚠️ C-like (complex) |
-| **Formal Specification** | ✅ Full BNF grammar | ❌ Informal | ⚠️ Partial |
-| **Theory-to-Code Mapping** | ✅ Explicit (Louden refs) | ❌ None | ❌ Framework-focused |
-| **GUI + CLI** | ✅ Both | ❌ Usually one | ⚠️ CLI only |
-| **Complete Toolchain** | ✅ Compile + assemble + run | ⚠️ Compile only | ✅ Via LLVM |
-| **Educational Documentation** | ✅ Extensive | ❌ Minimal | ⚠️ Tool-focused |
-
 ### Our Educational Impact
 
 Unlike passive tutorial-following or framework-based projects, TinyCompiled represents **genuine compiler construction learning through implementation**. We didn't just use existing tools — we built the tools themselves, gaining deep insight into:
