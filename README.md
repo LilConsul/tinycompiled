@@ -663,7 +663,7 @@ This project is provided for educational purposes. Please refer to the repositor
 
 ### Related Resources
 
-4. **Aalhour, A.** (2024). *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers
+4. **Aalhour, A.** *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers (accessed November 2025)
    - Comprehensive collection of educational compiler resources
    - Used during research phase to study existing educational compilers
    - Helped identify gaps in compiler pedagogy that TinyCompiled addresses
