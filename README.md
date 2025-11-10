@@ -74,6 +74,19 @@ TinyCompiled follows a traditional compiler architecture:
 2. **Syntax Analysis** (`src/parser/`): Parses tokens into an Abstract Syntax Tree (AST)
 3. **Code Generation** (`src/generator/`): Translates AST into NASM x86-64 assembly code
 
+### 🧩 Modular Components
+
+TinyCompiled is organized into modular components that reflect the typical stages of a compiler:
+
+- **Lexer** (`src/lexer/`): Tokenizes the input `.tc` source files into a stream of tokens
+- **Parser** (`src/parser/`): Analyzes the token stream and builds an Abstract Syntax Tree (AST)
+- **AST** (`src/ast/`): Represents the program structure in a tree format for further processing
+- **Code Generator** (`src/generator/`): Converts the intermediate representation of AST into x86-64 NASM assembly code
+- **Compiler** (`src/compiler/`): Coordinates the overall compilation pipeline
+- **GUI** (`gui.py`): Provides an interactive Textual-based interface for users to write, compile, and visualize code execution
+
+Each component is organized in its own subdirectory within `src/`, promoting separation of concerns and ease of maintenance.
+
 ### 🎯 Virtual Registers
 
 TinyCompiled provides 8 virtual registers that map to x86-64 registers:
@@ -337,20 +350,6 @@ NOP               ; No operation
 ; comment         ; Single-line comment
 ```
 
-## 🏗️ Architecture
-
-TinyCompiled is organized into modular components that reflect the typical stages of a compiler:
-
-- **Lexer**: Tokenizes the input `.tc` source files into a stream of tokens.
-- **Parser**: Analyzes the token stream and builds an Abstract Syntax Tree (AST).
-- **AST**: Represents the program structure in a tree format for further processing.
-- **Code Generator**: Converts the intermediate representation of AST into x86-64 NASM assembly code.
-- **Compiler**: Coordinates the general compilation pipeline.
-- **Visualizer/GUI**: Provides an interactive interface for users to write, compile, and visualize code execution.
-
-Each component is organized in its own subdirectory within `src/`, promoting separation of concerns and ease of
-maintenance.
-
 ## 📚 Documentation
 
 For comprehensive documentation, see:
@@ -387,8 +386,7 @@ tinycompiled/
 │   └── ...
 ├── docs/
 │   ├── DOCUMENTATION.md     # Language reference
-│   ├── DEFINITION.md        # Formal language definition
-│   └── USAGE.md             # Usage examples
+│   └── DEFINITION.md        # Formal language definition
 ├── cli.py                   # Command-line interface
 ├── gui.py                   # GUI application
 └── pyproject.toml           # Project configuration
@@ -733,7 +731,7 @@ This project is provided for educational purposes. Please refer to the repositor
 
 ### Related Resources
 
-5. **Aalhour, A.** *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers (accessed November 2025)
+5. **Aalhour, A.** *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers (accessed October 2025)
    - Comprehensive collection of educational compiler resources
    - Used during research phase to study existing educational compilers
    - Helped identify gaps in compiler pedagogy that TinyCompiled addresses
