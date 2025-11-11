@@ -11,6 +11,13 @@ developers understand the fundamentals of low-level programming, assembly langua
 on demonstrating how high-level instructions are translated into assembly code, providing an intuitive and interactive
 experience for learning and experimentation.
 
+## 🎯 Project Goals
+
+- **Educational Focus**: Help beginners understand assembly language and low-level programming concepts
+- **Interactive Learning**: Provide real-time visualization of code translation
+- **Accessibility**: Make assembly language learning approachable and engaging
+- **Practical Knowledge**: Bridge the gap between high-level and low-level programming
+
 ## 📖 Overview
 
 TinyCompiled takes programs written in **TinyCompiled** (`.tc` files) — a simplified, human-readable assembly-like
@@ -391,13 +398,6 @@ tinycompiled/
 ├── gui.py                   # GUI application
 └── pyproject.toml           # Project configuration
 ```
-
-## 🎯 Project Goals
-
-- **Educational Focus**: Help beginners understand assembly language and low-level programming concepts
-- **Interactive Learning**: Provide real-time visualization of code translation
-- **Accessibility**: Make assembly language learning approachable and engaging
-- **Practical Knowledge**: Bridge the gap between high-level and low-level programming
 
 ## 💪 Our Implementation Experience
 
