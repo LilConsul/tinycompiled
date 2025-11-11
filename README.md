@@ -440,7 +440,7 @@ SUB R2, R1, 5   # This works fine
 ```
 
 **The Solution:**
-Consulted **Louden (1997), Chapter 2.4 "Implementation of a Scanner"** (pp. 52-54), which discusses lookahead techniques. We implemented one-character lookahead using `peek_char()`:
+Consulted **Louden (1997), Chapter 2.4 "Implementation of a Scanner"** (pp. 52-54), which discusses lookahead techniques. We implemented character lookahead using `peek_char()`:
 
 ```python
 def read_number(self):
@@ -600,7 +600,7 @@ This resource helped us identify common patterns in educational compilers and, m
 
 ### Why TinyCompiled is Superior for Learning
 
-After analyzing dozens of educational compiler projects, we designed TinyCompiled to overcome common limitations:
+After analyzing educational compiler projects, we designed TinyCompiled to overcome common limitations:
 
 #### 1. **From-Scratch Implementation vs. Framework-Based**
 
@@ -618,14 +618,13 @@ After analyzing dozens of educational compiler projects, we designed TinyCompile
 #### 2. **Real-Time Interactive Visualization**
 
 **Most Educational Compilers:**
-- Batch processing: compile → see output
+- Batch processing: compile and view the output
 - No intermediate step visualization
 - Difficult to understand the compilation process
 
 **TinyCompiled:**
 - **Unique feature**: Side-by-side TUI showing source and NASM assembly simultaneously
 - Instant visual feedback as you type (Ctrl+R to recompile)
-- Color-coded diff-style interface for easy comparison
 - See exactly how each instruction translates in real-time
 - Makes the "invisible" compilation process visible and tangible
 
@@ -666,8 +665,6 @@ After analyzing dozens of educational compiler projects, we designed TinyCompile
 
 **TinyCompiled:**
 - Formal BNF grammar specification ([DEFINITION.md](docs/DEFINITION.md))
-- Complete mapping to Louden (1997) chapters and page numbers
-- Professional academic documentation standards
 - Explicit connection between implementation and theory
 - Can be used as a companion to compiler textbooks
 
@@ -680,7 +677,7 @@ After analyzing dozens of educational compiler projects, we designed TinyCompile
 **TinyCompiled:**
 - CLI for scripting and automation (`cli.py`)
 - Interactive GUI for visual learners (`gui.py`)
-- Both interfaces provide the same powerful features
+- Both interfaces provide the same features
 - Switch between modes based on task and preference
 
 ### Our Educational Impact
@@ -701,40 +698,21 @@ This hands-on approach to learning compiler construction cannot be replicated by
 - [Language Documentation](docs/DOCUMENTATION.md) - Complete guide and examples
 - [Formal Definition](docs/DEFINITION.md) - BNF grammar and language specification
 
-## 📄 License
-
-This project is provided for educational purposes. Please refer to the repository for specific licensing information.
-
 ## 📖 Academic References
 
 ### Primary Textbooks
 
 1. **Louden, K. C.** (1997). *Compiler Construction: Principles and Practice*. PWS Publishing Company.
-   - **Primary theoretical foundation for this implementation**
-   - Chapter 2: Scanning and lookahead techniques for number literals
-   - Chapter 4: Recursive descent parsing without backtracking
-   - Chapter 8: Code generation with unique label management and register allocation
-   - Practical solutions for real implementation challenges
 
 2. **Fischer, C. N., & LeBlanc, R. J.** (1991). *Crafting a Compiler*. Benjamin/Cummings Publishing.
-   - Chapter 3: Prefix-based disambiguation for multiple number formats
-   - Chapter 5: Recursive descent parser structure and termination conditions
-   - Hands-on approach to implementing lexers and parsers
 
 3. **Appel, A. W.** (2004). *Modern Compiler Implementation in C*. Cambridge University Press.
-   - Chapter 7: Direction-aware loop code generation
-   - Modern techniques for x86-64 code generation
 
 4. **Aho, A. V., Lam, M. S., Sethi, R., & Ullman, J. D.** (2006). *Compilers: Principles, Techniques, and Tools* (2nd ed.). Pearson Education.
-   - "Dragon Book" - comprehensive compiler theory reference
-   - Theoretical foundations and formal approaches
 
 ### Related Resources
 
 5. **Aalhour, A.** *Awesome Compilers - A curated list of awesome resources on Compilers, Interpreters and Runtimes*. GitHub Repository. https://github.com/aalhour/awesome-compilers (accessed October 2025)
-   - Comprehensive collection of educational compiler resources
-   - Used during research phase to study existing educational compilers
-   - Helped identify gaps in compiler pedagogy that TinyCompiled addresses
 
 ### Technical References
 
@@ -752,3 +730,7 @@ This project is provided for educational purposes. Please refer to the repositor
 - [NASM Assembler Documentation](https://www.nasm.us/docs.html) - Target assembly language specification
 - [Textual Framework Documentation](https://textual.textualize.io/) - GUI implementation framework
 - [x86-64 ABI Reference](https://refspecs.linuxfoundation.org/elf/x86_64-abi-0.99.pdf) - Calling conventions and register usage
+
+## 📄 License
+
+This project is provided for educational purposes. Please refer to the repository for specific licensing information.
